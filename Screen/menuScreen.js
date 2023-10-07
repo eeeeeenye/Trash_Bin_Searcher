@@ -1,7 +1,15 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+
 
 const MenuScreen = () => {
+    const navigation = useNavigation();
+
+    const handleRegisterPress = () => {
+      navigation.navigate('RegisterScreen');
+    };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -13,8 +21,8 @@ const MenuScreen = () => {
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>내 주변 쓰레기통</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>쓰레기통 위치 등록 및 삭제</Text>
+      <TouchableOpacity style={styles.button} onPress={handleRegisterPress}>
+        <Text style={styles.buttonText}>쓰레기통 위치 등록</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>쓰레기통 주변이 더러워요!</Text>

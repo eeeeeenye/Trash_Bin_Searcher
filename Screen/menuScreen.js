@@ -12,9 +12,9 @@ const MenuScreen = () => {
     };
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Image source={require('../assets/Group 28.png')} style={styles.titleImage} />
-      </View>
+     
+        <Image source={require('../assets/Group28.png')} style={styles.titleImage} />
+     
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>쓰레기통 검색</Text>
       </TouchableOpacity>
@@ -37,12 +37,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  header: {
-    marginBottom: 20,
-  },
+
   titleImage: {
-    width: 189,
-    height: 89,
+    width: 190,
+    height: 90,
+    marginBottom: 20,
   },
   button: {
     width: 281,

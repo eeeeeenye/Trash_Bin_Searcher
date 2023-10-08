@@ -7,6 +7,7 @@ import MenuScreen from './Screen/menuScreen';
 import RegisterScreen from './Screen/registerScreen';
 import ComplaintPage from './Screen/compaintPage';
 import TrashBinRegistration from './Screen/trashBinRegistration';
+import CameraScreen from './Screen/cameraScreen';
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -35,6 +36,17 @@ const App = () => {
           }}
           name="trashBinRegistration"
           component={TrashBinRegistration}
+        />
+        <Stack.Screen
+          options={{
+            headerTitle: '?Wbin',
+            headerTitleStyle: {
+              color: '#BDFF00', // 타이틀 색상 변경
+              fontSize: 30
+            },
+          }}
+          name="CameraScreen"
+          component={CameraScreen}
         />
         <Stack.Screen
           options={{

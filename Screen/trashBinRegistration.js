@@ -1,14 +1,15 @@
 // TrashBinRegistration.js
-
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Text } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 
 const TrashBinRegistration = () => {
   const [address, setAddress] = useState('');
   const [detailAddress, setDetailAddress] = useState('');
   const [applicationDate, setApplicationDate] = useState('');
   const [binType, setBinType] = useState('');
-
+  const route = useRoute();
+  const capturedImage = route.params?.capturedImage;
   const handleRegister = () => {
     // 쓰레기통 등록 로직 추가
     console.log('쓰레기통을 등록합니다.');
@@ -16,9 +17,10 @@ const TrashBinRegistration = () => {
 
   return (
 
-      <View style={styles.inputContainer}>
+    <View style={styles.inputContainer}>
+    {capturedImage && <Image source={{ uri: capturedImage }} style={styles.capturedImage} />}
         <View style={styles.inputRow}>
-          <Image source={require('../assets/place.png')} style={styles.icon2} />
+          <Image source={require('./png/place.png')} style={styles.icon2} />
           <Text >주소</Text>
           <TextInput
             style={[styles.input, { borderColor: '#D9D9D9' }]}
@@ -28,7 +30,7 @@ const TrashBinRegistration = () => {
           />
         </View>
         <View style={styles.inputRow}>
-          <Image source={require('../assets/place.png')} style={styles.icon2} />
+          <Image source={require('./png/place.png')} style={styles.icon2} />
           <Text >세부 주소</Text>
           <TextInput
             style={[styles.input, { borderColor: '#D9D9D9' }]}
@@ -38,7 +40,7 @@ const TrashBinRegistration = () => {
           />
         </View>
         <View style={styles.inputRow}>
-          <Image source={require('../assets/date.png')} style={styles.icon2} />
+          <Image source={require('./png/date.png')} style={styles.icon2} />
           <Text >신청 날짜</Text>
           <TextInput
             style={[styles.input, { borderColor: '#D9D9D9' }]}
@@ -57,15 +59,15 @@ const TrashBinRegistration = () => {
           />
         </View>
         <View style={styles.disclaimer}>
-          <Image source={require('../assets/righteye.png')} style={styles.disclaimerIcon} />
+          <Image source={require('./png/rightEye.png')} style={styles.disclaimerIcon} />
           <Text style={styles.disclaimerText}>
             확인 후 허위 사실일 경우 형사처벌이 있을 수 있습니다.
           </Text>
         </View>
         <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>등록하기</Text>
-        </TouchableOpacity>
-      </View>
+        <Text style={styles.buttonText}>등록하기</Text>
+      </TouchableOpacity>
+    </View>
 
   );
 };

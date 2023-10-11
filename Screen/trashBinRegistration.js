@@ -18,7 +18,7 @@ const TrashBinRegistration = () => {
   return (
 
     <View style={styles.inputContainer}>
-    {capturedImage && <Image source={{ uri: capturedImage }} style={styles.capturedImage} />}
+    {capturedImage && <Image source={{ uri: capturedImage.uri }} style={styles.capturedImage} />}
         <View style={styles.inputRow}>
           <Image source={require('./png/place.png')} style={styles.icon2} />
           <Text >주소</Text>

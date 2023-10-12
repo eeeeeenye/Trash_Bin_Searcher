@@ -52,17 +52,25 @@ const CameraScreen = () => {
   
       console.log('Location:', location);
   
-      setCapturedImage({ uri: data.uri, location });
+      const capturedImageData = { uri: data.uri, location };
+      console.log('Captured Image Data:', capturedImageData);
+  
+      setCapturedImage(capturedImageData);
     }
   };
+  
   
   
 
   const handleProceed = () => {
     if (capturedImage) {
-      navigation.navigate('trashBinRegistration', { capturedImage });
+      navigation.navigate('trashBinRegistration', {
+        capturedImage,
+        location: capturedImage.location
+      });
     }
   };
+  
   
 
   if (hasPermission === null) {

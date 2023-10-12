@@ -8,6 +8,8 @@ import RegisterScreen from './Screen/registerScreen';
 import ComplaintPage from './Screen/compaintPage';
 import TrashBinRegistration from './Screen/trashBinRegistration';
 import CameraScreen from './Screen/cameraScreen';
+import SearchCan from './Screen/searchCanScreen';
+import LocationSearch from './Screen/locationSearch';
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -20,6 +22,20 @@ const App = () => {
           }}
           name="MenuScreen"
           component={MenuScreen}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: true,
+          }}
+          name="SearchCan"
+          component={SearchCan}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: true,
+          }}
+          name="LocationSearch"
+          component={LocationSearch}
         />
         <Stack.Screen
           options={{

@@ -8,6 +8,7 @@ const TrashBinRegistration = () => {
   const [detailAddress, setDetailAddress] = useState('');
   const [applicationDate, setApplicationDate] = useState('');
   const [binType, setBinType] = useState('');
+  
   const route = useRoute();
   const capturedImage = route.params?.capturedImage;
   const handleRegister = () => {
@@ -18,7 +19,9 @@ const TrashBinRegistration = () => {
   return (
 
     <View style={styles.inputContainer}>
-    {capturedImage && <Image source={{ uri: capturedImage.uri }} style={styles.capturedImage} />}
+   <View style={styles.imageContainer}>
+        {capturedImage && <Image source={{ uri: capturedImage.uri }} style={styles.capturedImage} />}
+      </View>
         <View style={styles.inputRow}>
           <Image source={require('./png/place.png')} style={styles.icon2} />
           <Text >주소</Text>
@@ -133,6 +136,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 13,
   },
+  capturedImage: {
+    width: 250, // Adjust the dimensions as needed
+    height: 250, // Adjust the dimensions as needed
+    marginBottom: 20,
+  },
+  imageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  
 });
 
 export default TrashBinRegistration;

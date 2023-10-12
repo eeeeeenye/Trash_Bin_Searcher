@@ -10,16 +10,23 @@ const MenuScreen = () => {
     const handleRegisterPress = () => {
       navigation.navigate('RegisterScreen');
     };
+ 
+    const SearchPress = () => {
+      navigation.navigate('SearchCan');
+    };
+    const locationSearchPress = () => {
+      navigation.navigate('LocationSearch');
+    };
   return (
     <View style={styles.container}>
      
         <Image source={require('../assets/Group28.png')} style={styles.titleImage} />
      
       <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>쓰레기통 검색</Text>
+        <Text style={styles.buttonText} onPress={locationSearchPress}>쓰레기통 검색</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>내 주변 쓰레기통</Text>
+        <Text style={styles.buttonText}onPress={SearchPress}>내 주변 쓰레기통</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleRegisterPress}>
         <Text style={styles.buttonText}>쓰레기통 위치 등록</Text>

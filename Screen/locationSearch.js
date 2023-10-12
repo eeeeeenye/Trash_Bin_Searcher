@@ -278,7 +278,7 @@ const cities = {
 const LocationSearch = () => {
 
   const navigation = useNavigation();
-
+ 
   const [selectedLocation, setSelectedLocation] = useState(null); // 특별시,광역시,도 가 선택됬을 때 그에 맞는 시,군,구를 보여주게하기 위한  변수
   const [checkPushCity, setCheckPushCity] = React.useState(false); //특별시,광역시,도 가 선택됬을 때 뷰를 전환하기 위한 변수
   const [selectedSearchWay, setSelectedSerchWay] = React.useState(false); //검색방식을 컨트롤하기 위한 boolean타입 변수
@@ -691,7 +691,7 @@ const LocationSearch = () => {
       <View style={styles.tabContainer}>
         <TouchableOpacity
           onPress={() => {
-            setSelectedSerchWay(true);
+        
             navigation.navigate('SearchCan')
           }}
           style={
@@ -702,7 +702,8 @@ const LocationSearch = () => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            setSelectedSerchWay(false);
+            setSelectedSerchWay(true);
+            navigation.navigate('LocationSearch')
           }}
           style={
             !selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab

@@ -37,7 +37,7 @@ const SearchCan = () => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            setSelectedSearchWay(false);
+            
             navigation.navigate('LocationSearch')
           }}
           style={!selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab}

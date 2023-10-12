@@ -59,7 +59,7 @@ const SearchCan = () => {
           style={styles.searchIconContainer}
         >
           <Image
-            source={require("../assets/icon.png")}
+            source={require("../assets/search.png")}
             style={styles.searchIcon}
           />
         </TouchableOpacity>   

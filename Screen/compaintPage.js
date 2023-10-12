@@ -20,7 +20,7 @@ const ComplaintPage = () => {
     <ScrollView style={styles.container}>
       <View style={styles.inputContainer}>
         <View style={styles.inputRow}>
-          <Image source={require('./png/earth.png')} style={styles.icon} />
+          <Image source={require('../assets/earth.png')} style={styles.icon} />
           <TextInput
             style={[styles.input, { borderColor: '#D9D9D9' }]}
             placeholder="제목"
@@ -29,7 +29,7 @@ const ComplaintPage = () => {
           />
         </View>
         <View style={styles.inputRow}>
-          <Image source={require('./png/place.png')} style={styles.icon2} />
+          <Image source={require('../assets/place.png')} style={styles.icon2} />
           <Text >주소</Text>
           <TextInput
             style={[styles.input, { borderColor: '#D9D9D9' }]}
@@ -39,7 +39,7 @@ const ComplaintPage = () => {
           />
         </View>
         <View style={styles.inputRow}>
-          <Image source={require('./png/date.png')} style={styles.icon2} />
+          <Image source={require('../assets/date.png')} style={styles.icon2} />
           <Text >날짜</Text>
           <TextInput
             style={[styles.input, { borderColor: '#D9D9D9' }]}
@@ -68,7 +68,7 @@ const ComplaintPage = () => {
         <Text style={styles.buttonText}>사진 추가</Text>
         </TouchableOpacity>} 
         <View style={styles.disclaimer}>
-          <Image source={require('./png/rightEye.png')} style={styles.disclaimerIcon} />
+          <Image source={require('../assets/rightEye.png')} style={styles.disclaimerIcon} />
           <Text style={styles.disclaimerText}>
             확인 후 허위 사실일 경우 형사처벌이 있을 수 있습니다.
           </Text>

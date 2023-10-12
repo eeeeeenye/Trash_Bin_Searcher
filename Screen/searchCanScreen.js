@@ -1,10 +1,14 @@
 import React from "react";
 import { View, Text, StyleSheet, TextInput, Dimensions, TouchableOpacity, SafeAreaView, Image } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
-
+import { useNavigation } from '@react-navigation/native';
 const deviceWidth = Dimensions.get("window").width;
 
 const SearchCan = () => {
+  
+
+  const navigation = useNavigation();
+
   // 초기 좌표 설정
   const initialRegion = {
     latitude: 37.575843,
@@ -25,6 +29,7 @@ const SearchCan = () => {
         <TouchableOpacity
           onPress={() => {
             setSelectedSearchWay(true);
+            
           }}
           style={selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab}
         >
@@ -33,6 +38,7 @@ const SearchCan = () => {
         <TouchableOpacity
           onPress={() => {
             setSelectedSearchWay(false);
+            navigation.navigate('LocationSearch')
           }}
           style={!selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab}
         >

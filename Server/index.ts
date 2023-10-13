@@ -1,5 +1,3 @@
-exports {}
-
 require('dotenv').config()
 const express = require('express')
 const logger = require('morgan')
@@ -7,6 +5,8 @@ const app = express()
 const cors = require('cors')
 const path = require('path')
 const env = require('dotenv')
+
+const db = require('./db')
 
 env.config({path: path.resolv(__dirname, './config/config.js')})
 
@@ -21,6 +21,8 @@ app.use(
         origin: ['http://localhost:19006']
     })
 )
+
+
 
 app.get('/', (req,res) => {
     res.status(200).send("접속완료되었습니다.")

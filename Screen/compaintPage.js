@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Text } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 
 const ComplaintPage = () => {
   const [title, setTitle] = useState('');
@@ -8,8 +9,27 @@ const ComplaintPage = () => {
   const [content, setContent] = useState('');
   const [photos, setPhotos] = useState([]);
 
-  const handleAddPhoto = () => {
-    setPhotos(prevPhotos => [...prevPhotos, 'https://via.placeholder.com/150']);
+  const handleAddPhoto = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('카메라 롤 권한이 필요합니다.');
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.8,
+    });
+
+    if (!result.canceled) {
+      if (result.assets && result.assets.length > 0) {
+        setPhotos(prevPhotos => [...prevPhotos, result.assets[0].uri]);
+      } else {
+        setPhotos(prevPhotos => [...prevPhotos, result.uri]);
+      }
+    }
   };
 
   const handleSubmit = () => {
@@ -20,7 +40,7 @@ const ComplaintPage = () => {
     <ScrollView style={styles.container}>
       <View style={styles.inputContainer}>
         <View style={styles.inputRow}>
-          <Image source={require('./png/earth.png')} style={styles.icon} />
+          <Image source={require('../assets/earth.png')} style={styles.icon} />
           <TextInput
             style={[styles.input, { borderColor: '#D9D9D9' }]}
             placeholder="제목"
@@ -29,7 +49,7 @@ const ComplaintPage = () => {
           />
         </View>
         <View style={styles.inputRow}>
-          <Image source={require('./png/place.png')} style={styles.icon2} />
+          <Image source={require('../assets/place.png')} style={styles.icon2} />
           <Text >주소</Text>
           <TextInput
             style={[styles.input, { borderColor: '#D9D9D9' }]}
@@ -39,7 +59,7 @@ const ComplaintPage = () => {
           />
         </View>
         <View style={styles.inputRow}>
-          <Image source={require('./png/date.png')} style={styles.icon2} />
+          <Image source={require('../assets/date.png')} style={styles.icon2} />
           <Text >날짜</Text>
           <TextInput
             style={[styles.input, { borderColor: '#D9D9D9' }]}
@@ -56,7 +76,7 @@ const ComplaintPage = () => {
           multiline
         />
         <View style={styles.photoContainer}>
-          {photos.map((photo, index) => (
+          {photos.slice(0, 4).map((photo, index) => (
             <Image
               key={index}
               source={{ uri: photo }}
@@ -68,7 +88,7 @@ const ComplaintPage = () => {
         <Text style={styles.buttonText}>사진 추가</Text>
         </TouchableOpacity>} 
         <View style={styles.disclaimer}>
-          <Image source={require('./png/rightEye.png')} style={styles.disclaimerIcon} />
+          <Image source={require('../assets/rightEye.png')} style={styles.disclaimerIcon} />
           <Text style={styles.disclaimerText}>
             확인 후 허위 사실일 경우 형사처벌이 있을 수 있습니다.
           </Text>
@@ -121,8 +141,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   photo: {
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 70,
     marginBottom: 10,
   },
   icon: {
@@ -139,13 +159,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
-    marginBottom: 10,
+    padding:5,
   },
   disclaimerIcon: {
     width: 34,
     height: 26,
-    marginRight: 10,
   },
   disclaimerText: {
     color: 'black',

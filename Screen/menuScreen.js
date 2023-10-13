@@ -31,9 +31,6 @@ const MenuScreen = () => {
       <TouchableOpacity style={styles.button} onPress={handleRegisterPress}>
         <Text style={styles.buttonText}>쓰레기통 위치 등록</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>쓰레기통 주변이 더러워요!</Text>
-      </TouchableOpacity>
     </View>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Text } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 
 const ComplaintPage = () => {
   const [title, setTitle] = useState('');
@@ -8,8 +9,27 @@ const ComplaintPage = () => {
   const [content, setContent] = useState('');
   const [photos, setPhotos] = useState([]);
 
-  const handleAddPhoto = () => {
-    setPhotos(prevPhotos => [...prevPhotos, 'https://via.placeholder.com/150']);
+  const handleAddPhoto = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('카메라 롤 권한이 필요합니다.');
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.8,
+    });
+
+    if (!result.canceled) {
+      if (result.assets && result.assets.length > 0) {
+        setPhotos(prevPhotos => [...prevPhotos, result.assets[0].uri]);
+      } else {
+        setPhotos(prevPhotos => [...prevPhotos, result.uri]);
+      }
+    }
   };
 
   const handleSubmit = () => {
@@ -56,7 +76,7 @@ const ComplaintPage = () => {
           multiline
         />
         <View style={styles.photoContainer}>
-          {photos.map((photo, index) => (
+          {photos.slice(0, 4).map((photo, index) => (
             <Image
               key={index}
               source={{ uri: photo }}
@@ -121,8 +141,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   photo: {
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 70,
     marginBottom: 10,
   },
   icon: {
@@ -139,13 +159,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
-    marginBottom: 10,
+    padding:5,
   },
   disclaimerIcon: {
     width: 34,
     height: 26,
-    marginRight: 10,
   },
   disclaimerText: {
     color: 'black',

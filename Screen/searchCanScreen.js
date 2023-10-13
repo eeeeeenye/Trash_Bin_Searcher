@@ -2,6 +2,8 @@ import React from "react";
 import { View, Text, StyleSheet, TextInput, Dimensions, TouchableOpacity, SafeAreaView, Image } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useNavigation } from '@react-navigation/native';
+import { KeyboardAvoidingView } from 'react-native';
+
 const deviceWidth = Dimensions.get("window").width;
 
 const SearchCan = () => {
@@ -20,73 +22,78 @@ const SearchCan = () => {
   const trashCategory = ["재활용만", "일반\n쓰레기만", "모두"];
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* 지도 */}
-      <MapView
-        style={styles.map}
-        provider={PROVIDER_GOOGLE}
-        initialRegion={initialRegion}
-        showsUserLocation={true}
-        showsMyLocationButton={true}
-      />
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === "ios" ? "padding" : "height"} 
+      style={styles.container}
+    >
+      <SafeAreaView style={styles.container}>
+        {/* 지도 */}
+        <MapView
+          style={styles.map}
+          provider={PROVIDER_GOOGLE}
+          initialRegion={initialRegion}
+          showsUserLocation={true}
+          showsMyLocationButton={true}
+        />
 
-      {/* 상단 탭 */}
-      <View style={styles.tabContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            setSelectedSearchWay(true);
-          }}
-          style={selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab}
-        >
-          <Text style={styles.tabText}>직접 입력</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('LocationSearch');
-          }}
-          style={!selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab}
-        >
-          <Text style={styles.tabText}>지역 검색</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* 나머지 컴포넌트들 */}
-      <View style={styles.otherComponents}>
-        {/* 검색 입력란 (위에 겹쳐 표시) */}
-        <TextInput placeholder="검색장소 입력" style={styles.input} />
-        <TouchableOpacity
-          // onPress={()=>{}}   --> 기능 추가 지오코딩 함수
-          style={styles.searchIconContainer}
-        >
-          <Image
-            source={require("../assets/search.png")}
-            style={styles.searchIcon}
-          />
-        </TouchableOpacity>   
-        <View style={styles.trashCategories}>
-          {trashCategory.map((category, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.trashCategory}
-            >
-              <Text style={styles.categoryText}>
-                {category}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        
-        {/* 하단 바 */}
-        <View style={styles.bottomBar}>
-          <TouchableOpacity >
-            <Image
-              source={require("../assets/circleB.png")}
-              style={styles.circleIcon}
-            />
+        {/* 상단 탭 */}
+        <View style={styles.tabContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedSearchWay(true);
+            }}
+            style={selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab}
+          >
+            <Text style={styles.tabText}>직접 입력</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('LocationSearch');
+            }}
+            style={!selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab}
+          >
+            <Text style={styles.tabText}>지역 검색</Text>
           </TouchableOpacity>
         </View>
-      </View>
-    </SafeAreaView>
+
+        {/* 나머지 컴포넌트들 */}
+        <View style={styles.otherComponents}>
+          {/* 검색 입력란 (위에 겹쳐 표시) */}
+          <TextInput placeholder="검색장소 입력" style={styles.input} />
+          <TouchableOpacity
+            // onPress={()=>{}}   --> 기능 추가 지오코딩 함수
+            style={styles.searchIconContainer}
+          >
+            <Image
+              source={require("../assets/search.png")}
+              style={styles.searchIcon}
+            />
+          </TouchableOpacity>   
+          <View style={styles.trashCategories}>
+            {trashCategory.map((category, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.trashCategory}
+              >
+                <Text style={styles.categoryText}>
+                  {category}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          
+          {/* 하단 바 */}
+          <View style={styles.bottomBar}>
+            <TouchableOpacity >
+              <Image
+                source={require("../assets/circleB.png")}
+                style={styles.circleIcon}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 

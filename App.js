@@ -1,4 +1,5 @@
 import React from 'react';
+<<<<<<< HEAD
 import Stack from './Navigator/stack';
 import CoodData from './component/coodData';
 import * as Location from "expo-location";
@@ -26,6 +27,11 @@ React.useEffect(()=>{
       CoodData.longitude = longitude;
     })();
   }, []);
+=======
+import Stack from './stack/stack';
+
+const App = () => {
+>>>>>>> c76bdef (Stack)
   return <Stack />;
 };
 

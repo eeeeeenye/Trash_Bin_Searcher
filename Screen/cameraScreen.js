@@ -67,7 +67,8 @@ const CameraScreen = () => {
       navigation.navigate('trashBinRegistration', {
         capturedImage,
         location: capturedImage.location
-      });
+        
+      });console.log(capturedImage.location)
     }
   };
   

@@ -22,7 +22,8 @@ app.use(
     })
 )
 
-
+/*db 접속*/
+db.run().catch(console.error)
 
 app.get('/', (req,res) => {
     res.status(200).send("접속완료되었습니다.")

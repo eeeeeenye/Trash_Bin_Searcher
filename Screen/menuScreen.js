@@ -34,9 +34,12 @@ const MenuScreen = () => {
       <TouchableOpacity style={styles.button} onPress={handleRegisterPress}>
         <Text style={styles.buttonText}>쓰레기통 위치 등록, 삭제</Text>
       </TouchableOpacity>
+<<<<<<< HEAD
       <TouchableOpacity style={styles.button} onPress={handleLoginPress}>
         <Text style={styles.buttonText}>관리자 접속</Text>
       </TouchableOpacity>
+=======
+>>>>>>> fcdb019 (bottomB)
     </View>
   );
 };

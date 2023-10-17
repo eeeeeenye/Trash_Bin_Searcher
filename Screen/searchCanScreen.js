@@ -1,21 +1,52 @@
 import React from "react";
-import { View, Text, StyleSheet, TextInput, Dimensions, TouchableOpacity, SafeAreaView, Image } from "react-native";
+import { View, Text, StyleSheet, TextInput, Dimensions, TouchableOpacity,Alert, SafeAreaView, Image } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAvoidingView } from 'react-native';
-
+import CoodData from "../component/coodData";
+const API_KEY = "";
 const deviceWidth = Dimensions.get("window").width;
 
 const SearchCan = () => {
-  
+ 
   const navigation = useNavigation();
+  const [address, setAddress] = React.useState("");
+  const [latitude, setLatitude] = React.useState(0);
+  const [longitude, setLongitude] = React.useState(0);
 
-  // 초기 좌표 설정
-  const initialRegion = {
-    latitude: 37.575843,
-    longitude: 126.97738,
-    latitudeDelta: 0.09,
-    longitudeDelta: 0.04,
+
+  const handleAddressSubmit = async () => {
+    try {
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+        address
+      )}&key=${API_KEY}`;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      const results = data.results;
+      if (results.length > 0) {
+        const { lat, lng } = results[0].geometry.location;
+        setLatitude(lat);
+        setLongitude(lng);
+      } else {
+        Alert.alert("Error", "No results found");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Geocoding API request failed");
+    }
+  };
+
+  const handleMylocation = async () => {
+    try {
+      setLatitude('0');
+      setLongitude('0');
+      setTimeout(() => {
+        setLatitude(CoodData.latitude);
+        setLongitude(CoodData.longitude);
+      }, 10);
+    } catch (error) {
+      Alert.alert("Error", "Failed to get location");
+    }
   };
 
   const [selectedSearchWay, setSelectedSearchWay] = React.useState(true);
@@ -29,12 +60,17 @@ const SearchCan = () => {
       <SafeAreaView style={styles.container}>
         {/* 지도 */}
         <MapView
-          style={styles.map}
-          provider={PROVIDER_GOOGLE}
-          initialRegion={initialRegion}
-          showsUserLocation={true}
-          showsMyLocationButton={true}
-        />
+        style={styles.map}
+        provider={PROVIDER_GOOGLE}
+        region={{
+          latitude: latitude || CoodData.latitude,
+          longitude: longitude || CoodData.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        }}
+        showsUserLocation={true}
+        showsMyLocationButton={true}
+      />
 
         {/* 상단 탭 */}
         <View style={styles.tabContainer}>
@@ -59,9 +95,16 @@ const SearchCan = () => {
         {/* 나머지 컴포넌트들 */}
         <View style={styles.otherComponents}>
           {/* 검색 입력란 (위에 겹쳐 표시) */}
-          <TextInput placeholder="검색장소 입력" style={styles.input} />
+          <TextInput
+          placeholder="검색장소 입력"
+          style={styles.input}
+          value={address}
+          onChangeText={setAddress}
+        />
           <TouchableOpacity
-            // onPress={()=>{}}   --> 기능 추가 지오코딩 함수
+             onPress={() => {
+              handleAddressSubmit();
+            }}
             style={styles.searchIconContainer}
           >
             <Image
@@ -84,7 +127,11 @@ const SearchCan = () => {
           
           {/* 하단 바 */}
           <View style={styles.bottomBar}>
-            <TouchableOpacity >
+            <TouchableOpacity 
+              onPress={() => {
+                handleMylocation();
+              }}
+            >
               <Image
                 source={require("../assets/circleB.png")}
                 style={styles.circleIcon}

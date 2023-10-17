@@ -3,13 +3,13 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import MenuScreen from '../Screen/menuScreen';
-import RegisterScreen from '../Screen/registerScreen';
-import ComplaintPage from '../Screen/compaintPage';
-import TrashBinRegistration from '../Screen/trashBinRegistration';
-import CameraScreen from '../Screen/cameraScreen';
-import SearchCan from '../Screen/searchCanScreen';
-import LocationSearch from '../Screen/locationSearch';
+import MenuScreen from '../../Screen/menuScreen';
+import RegisterScreen from '../../Screen/registerScreen';
+import ComplaintPage from '../../Screen/compaintPage';
+import TrashBinRegistration from '../../Screen/trashBinRegistration';
+import CameraScreen from '../../Screen/cameraScreen';
+import SearchCan from '../../Screen/searchCanScreen';
+import LocationSearch from '../../Screen/locationSearch';
 const Stack = createNativeStackNavigator();
 
 const Stacknav = () => {

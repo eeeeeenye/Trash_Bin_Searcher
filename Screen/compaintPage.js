@@ -5,9 +5,10 @@ import * as ImagePicker from 'expo-image-picker';
 const ComplaintPage = () => {
   const [title, setTitle] = useState('');
   const [location, setLocation] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(new Date().toLocaleDateString());
   const [content, setContent] = useState('');
   const [photos, setPhotos] = useState([]);
+  
 
   const handleAddPhoto = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();

@@ -4,13 +4,25 @@ import { View, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Text 
 import { useRoute } from '@react-navigation/native';
 
 const TrashBinRegistration = () => {
+  
+  const formatLocationString = (location) => {
+    if (!location) return '';
+  
+    const { region, city, street, streetNumber, postalCode, country } = location[0];
+  
+    return `${region} ${city} ${street} ${streetNumber} ${postalCode} ${country}`;
+  };
+
   const [address, setAddress] = useState('');
   const [detailAddress, setDetailAddress] = useState('');
   const [applicationDate, setApplicationDate] = useState('');
   const [binType, setBinType] = useState('');
-  
   const route = useRoute();
   const capturedImage = route.params?.capturedImage;
+  const location = route.params?.location;
+
+  const locationString = formatLocationString(location);
+
   const handleRegister = () => {
     // 쓰레기통 등록 로직 추가
     console.log('쓰레기통을 등록합니다.');
@@ -28,7 +40,7 @@ const TrashBinRegistration = () => {
           <TextInput
             style={[styles.input, { borderColor: '#D9D9D9' }]}
             placeholder="주소를 입력하세요."
-            value={address}
+            value={locationString}
             onChangeText={setAddress}
           />
         </View>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Alert,
   View,
   Text,
   StyleSheet,
@@ -8,9 +9,12 @@ import {
   Dimensions,
   SafeAreaView,
 } from "react-native";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 
 const deviceWidth = Dimensions.get("window").width;
+const API_KEY = "";
+
 const specialCities = [
   "서울특별시",
   "부산광역시",
@@ -276,20 +280,72 @@ const cities = {
 };
 
 const LocationSearch = () => {
-
   const navigation = useNavigation();
- 
+
   const [selectedLocation, setSelectedLocation] = useState(null); // 특별시,광역시,도 가 선택됬을 때 그에 맞는 시,군,구를 보여주게하기 위한  변수
+  const [selectedDistrict, setSelectedDistrict] = React.useState(null);
   const [checkPushCity, setCheckPushCity] = React.useState(false); //특별시,광역시,도 가 선택됬을 때 뷰를 전환하기 위한 변수
   const [selectedSearchWay, setSelectedSerchWay] = React.useState(false); //검색방식을 컨트롤하기 위한 boolean타입 변수
+
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
+
+  // React.useEffect(() => {
+  //   // x 또는 y 값이 변경될 때 실행할 로직을 여기에 작성
+  // }, [latitude, longitude]);
+
+  const initialRegion = {
+    latitude: latitude,
+    longitude: longitude,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  };
+
   const handleLocationSelect = (location) => {
     setSelectedLocation(location);
     setCheckPushCity(true);
   };
+  const handleAddressSubmit = async (address) => {
+    try {
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+        address
+      )}&key=${API_KEY}`;
+      const response = await fetch(url);
+      const data = await response.json();
 
+      const results = data.results;
+      if (results.length > 0) {
+        const { lat, lng } = results[0].geometry.location;
+        setLatitude(lat);
+        setLongitude(lng);
+      } else {
+        Alert.alert("Error", "No results found");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Geocoding API request failed");
+    }
+  };
+  const renderMapCheck = () => (
+    <View>
+      <View style={styles.buttonContainer}>
+        <View style={{ ...styles.locationButton, ...styles.selectedLocation }}>
+          <Text style={styles.buttonText}>{selectedLocation}</Text>
+        </View>
+
+        <View style={{ ...styles.locationButton, ...styles.selectedLocation }}>
+          <Text style={styles.buttonText}>{selectedDistrict}</Text>
+        </View>
+      </View>
+      <MapView
+        style={{ flex: 1 }}
+        provider={PROVIDER_GOOGLE}
+        initialRegion={initialRegion}
+        showsUserLocation={true}
+        region={initialRegion}
+      />
+    </View>
+  );
   const renderSeoulDistricts = () => {
-    
-
     //선택된 지역의 시,군,구를 나타내는 함수
     // 선택된 위치(selectedLocation)가 서울일 때 해당 서울 구를 나열
     if (selectedLocation === "서울특별시") {
@@ -307,8 +363,15 @@ const LocationSearch = () => {
           {cities["서울특별시"].map((district, index) => (
             <TouchableOpacity
               key={index}
-              style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              style={[
+                styles.districtButton,
+                selectedDistrict === district && styles.selectedLocation,
+              ]}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -331,7 +394,11 @@ const LocationSearch = () => {
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -354,7 +421,11 @@ const LocationSearch = () => {
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -373,11 +444,15 @@ const LocationSearch = () => {
           >
             <Text>인천광역시</Text>
           </View>
-          {cities["부산인천광역시광역시"].map((district, index) => (
+          {cities["인천광역시"].map((district, index) => (
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -400,7 +475,11 @@ const LocationSearch = () => {
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -423,7 +502,11 @@ const LocationSearch = () => {
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -446,7 +529,11 @@ const LocationSearch = () => {
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -469,7 +556,11 @@ const LocationSearch = () => {
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -492,7 +583,11 @@ const LocationSearch = () => {
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -515,7 +610,11 @@ const LocationSearch = () => {
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -538,7 +637,11 @@ const LocationSearch = () => {
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -561,7 +664,11 @@ const LocationSearch = () => {
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -584,7 +691,12 @@ const LocationSearch = () => {
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -607,7 +719,11 @@ const LocationSearch = () => {
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -630,7 +746,11 @@ const LocationSearch = () => {
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -653,7 +773,11 @@ const LocationSearch = () => {
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -676,7 +800,11 @@ const LocationSearch = () => {
             <TouchableOpacity
               key={index}
               style={styles.districtButton}
-              //onPress={() => handleLocationSelect(district)}
+              onPress={async () => {
+                await setSelectedDistrict(district);
+                const makeAddress = selectedLocation + " " + district;
+                handleAddressSubmit(makeAddress);
+              }}
             >
               <Text style={styles.districtButtonText}>{district}</Text>
             </TouchableOpacity>
@@ -691,31 +819,26 @@ const LocationSearch = () => {
       <View style={styles.tabContainer}>
         <TouchableOpacity
           onPress={() => {
-        
-            navigation.navigate('SearchCan')
+            setSelectedSerchWay(true);
+            navigation.navigate("SearchCan");
           }}
-          style={
-            selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab
-          }
+          style={styles.tab}
         >
           <Text style={styles.tabText}>직접 입력</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            setSelectedSerchWay(true);
-            navigation.navigate('LocationSearch')
+            setSelectedSerchWay(false);
           }}
-          style={
-            !selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab
-          }
+          style={[styles.tab, styles.selectedTab]}
         >
           <Text style={styles.tabText}>지역 검색</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.buttonContainer}>
-        {!checkPushCity &&
-          specialCities.map((city, index) => (
+      {selectedLocation === null && (
+        <View style={styles.buttonContainer}>
+          {specialCities.map((city, index) => (
             <TouchableOpacity
               key={index}
               style={[
@@ -727,8 +850,12 @@ const LocationSearch = () => {
               <Text style={styles.buttonText}>{provinces[index]}</Text>
             </TouchableOpacity>
           ))}
-      </View>
-      {renderSeoulDistricts()}
+        </View>
+      )}
+
+      {selectedDistrict === null
+        ? renderSeoulDistricts()
+        : renderMapCheck(selectedLocation, selectedDistrict)}
     </SafeAreaView>
   );
 };

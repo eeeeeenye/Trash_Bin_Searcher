@@ -10,8 +10,9 @@ import TrashBinRegistration from '../Screen/trashBinRegistration';
 import CameraScreen from '../Screen/cameraScreen';
 import SearchCan from '../Screen/searchCanScreen';
 import LocationSearch from '../Screen/locationSearch';
-import LoginScreen from '../Screen/LoginScreen';
-import AdminScreen from '../Screen/adminScreen';
+import LoginScreen from '../Screen/loginScreen';
+import AdminMenuScreen from '../Screen/adminMenuScreen';
+import AdminCanAdd from '../Screen/adminCanAddScreen';
 const Stack = createNativeStackNavigator();
 
 const Stacknav = () => {
@@ -36,15 +37,23 @@ const Stacknav = () => {
         name="Login" 
         component={LoginScreen}
          />
+        <Stack.Screen 
+         options={{
+          headerTitle: '등록관리',
+          headerTitleAlign: 'center', 
+        }}
 
+        name="ADCA" 
+        component={AdminCanAdd}
+         />
         <Stack.Screen 
          options={{
           headerTitle: '관리자 화면',
           headerTitleAlign: 'center', 
         }}
 
-        name="AdminScreen" 
-        component={AdminScreen} 
+        name="AdminMenuScreen" 
+        component={AdminMenuScreen} 
         />
 
 

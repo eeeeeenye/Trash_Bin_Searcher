@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Alert,
   View,
   Text,
   StyleSheet,
@@ -8,12 +7,14 @@ import {
   ScrollView,
   Dimensions,
   SafeAreaView,
+  Alert
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 
 const deviceWidth = Dimensions.get("window").width;
-const API_KEY = "";
+const API_KEY = "API";
+
 
 const specialCities = [
   "서울특별시",
@@ -329,11 +330,24 @@ const LocationSearch = () => {
     <View>
       <View style={styles.buttonContainer}>
         <View style={{ ...styles.locationButton, ...styles.selectedLocation }}>
-          <Text style={styles.buttonText}>{selectedLocation}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedLocation(null);
+              setSelectedDistrict(null);
+            }}
+          >
+            <Text style={styles.buttonText}>{selectedLocation}</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={{ ...styles.locationButton, ...styles.selectedLocation }}>
-          <Text style={styles.buttonText}>{selectedDistrict}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedDistrict(null);
+            }}
+          >
+            <Text style={styles.buttonText}>{selectedDistrict}</Text>
+          </TouchableOpacity>
         </View>
       </View>
       <MapView
@@ -358,7 +372,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>서울특별시</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>서울특별시</Text>
+            </TouchableOpacity>
           </View>
           {cities["서울특별시"].map((district, index) => (
             <TouchableOpacity
@@ -388,7 +408,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>부산광역시</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>부산광역시</Text>
+            </TouchableOpacity>
           </View>
           {cities["부산광역시"].map((district, index) => (
             <TouchableOpacity
@@ -415,7 +441,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>대구광역시</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>대구광역시</Text>
+            </TouchableOpacity>
           </View>
           {cities["대구광역시"].map((district, index) => (
             <TouchableOpacity
@@ -442,7 +474,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>인천광역시</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>인천광역시</Text>
+            </TouchableOpacity>
           </View>
           {cities["인천광역시"].map((district, index) => (
             <TouchableOpacity
@@ -469,7 +507,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>광주광역시</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>광주광역시</Text>
+            </TouchableOpacity>
           </View>
           {cities["광주광역시"].map((district, index) => (
             <TouchableOpacity
@@ -496,7 +540,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>대전광역시</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>대전광역시</Text>
+            </TouchableOpacity>
           </View>
           {cities["대전광역시"].map((district, index) => (
             <TouchableOpacity
@@ -523,7 +573,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>세종특별시</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>세종특별시</Text>
+            </TouchableOpacity>
           </View>
           {cities["세종특별시"].map((district, index) => (
             <TouchableOpacity
@@ -550,7 +606,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>울산광역시</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>울산광역시</Text>
+            </TouchableOpacity>
           </View>
           {cities["울산광역시"].map((district, index) => (
             <TouchableOpacity
@@ -577,7 +639,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>강원도</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>강원도</Text>
+            </TouchableOpacity>
           </View>
           {cities["강원도"].map((district, index) => (
             <TouchableOpacity
@@ -604,7 +672,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>경기도</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>경기도</Text>
+            </TouchableOpacity>
           </View>
           {cities["경기도"].map((district, index) => (
             <TouchableOpacity
@@ -631,7 +705,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>충청남도</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>충청남도</Text>
+            </TouchableOpacity>
           </View>
           {cities["충청남도"].map((district, index) => (
             <TouchableOpacity
@@ -658,7 +738,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>충청북도</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>충청북도</Text>
+            </TouchableOpacity>
           </View>
           {cities["충청북도"].map((district, index) => (
             <TouchableOpacity
@@ -685,7 +771,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>경상북도</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>경상북도</Text>
+            </TouchableOpacity>
           </View>
           {cities["경상북도"].map((district, index) => (
             <TouchableOpacity
@@ -713,7 +805,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>경상남도</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>경상남도</Text>
+            </TouchableOpacity>
           </View>
           {cities["경상남도"].map((district, index) => (
             <TouchableOpacity
@@ -740,7 +838,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>전라북도</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>전라북도</Text>
+            </TouchableOpacity>
           </View>
           {cities["전라북도"].map((district, index) => (
             <TouchableOpacity
@@ -767,7 +871,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>전라남도</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>전라남도</Text>
+            </TouchableOpacity>
           </View>
           {cities["전라남도"].map((district, index) => (
             <TouchableOpacity
@@ -794,7 +904,13 @@ const LocationSearch = () => {
               width: deviceWidth * 0.95,
             }}
           >
-            <Text>제주도</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLocation(null);
+              }}
+            >
+              <Text>제주도</Text>
+            </TouchableOpacity>
           </View>
           {cities["제주도"].map((district, index) => (
             <TouchableOpacity

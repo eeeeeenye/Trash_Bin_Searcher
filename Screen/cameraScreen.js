@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text ,Image} from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
@@ -83,12 +83,22 @@ const CameraScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Camera
-        ref={cameraRef}
-        style={styles.preview}
-        type={Camera.Constants.Type.back}
-        flashMode={Camera.Constants.FlashMode.on}
-      />
+       {!capturedImage && hasPermission && (
+        <Camera
+          ref={cameraRef}
+          style={styles.preview}
+          type={Camera.Constants.Type.back}
+          flashMode={Camera.Constants.FlashMode.off}
+        />
+      )}
+      {capturedImage && (
+        <View style={styles.capturedImageContainer}>
+          <Image
+            source={{ uri: capturedImage.uri }}
+            style={styles.capturedImage}
+          />
+        </View>
+      )}
       <View>
         <TouchableOpacity onPress={handleTakePicture} style={styles.capture}>
           <Text style={styles.captureText}>사진 찍기</Text>
@@ -133,6 +143,15 @@ const styles = StyleSheet.create({
   proceedText: {
     color: '#fff',
     fontSize: 20,
+  },
+  capturedImageContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  capturedImage: {
+    width: 250,
+    height: 250,
+    borderRadius: 10,
   },
 });
 

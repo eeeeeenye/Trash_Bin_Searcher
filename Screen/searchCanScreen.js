@@ -4,7 +4,7 @@ import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAvoidingView } from 'react-native';
 import CoodData from "../component/coodData";
-const API_KEY = "";
+const API_KEY = "API";
 const deviceWidth = Dimensions.get("window").width;
 
 const SearchCan = () => {
@@ -69,7 +69,7 @@ const SearchCan = () => {
           longitudeDelta: 0.01,
         }}
         showsUserLocation={true}
-        showsMyLocationButton={true}
+        showsMyLocationButton={false}
       />
 
         {/* 상단 탭 */}

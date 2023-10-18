@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity,TextInput, StyleSheet, Alert } from 'react-native';
 
 const LoginScreen = ({ navigation }) => {
   const [adminId, setAdminId] = useState('');
@@ -8,7 +8,7 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = () => {
     if (adminId === 'admin' && password === 'admin1234') {
       // Navigate to the administrator screen
-      navigation.navigate('AdminScreen');
+      navigation.navigate('AdminMenuScreen');
     } else {
       Alert.alert('Invalid Credentials', 'Please enter correct admin ID and password.');
     }
@@ -16,7 +16,7 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text>Admin Login</Text>
+      <Text>관리자 로그인</Text>
       <TextInput
         style={styles.input}
         placeholder="Admin ID"
@@ -30,7 +30,9 @@ const LoginScreen = ({ navigation }) => {
         value={password}
         onChangeText={setPassword}
       />
-      <Button style={styles.button} title="Login" onPress={handleLogin} />
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>로그인</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -47,6 +49,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingLeft: 10,
+  },
+  button: {
+    width: 200,
+    height: 50,
+    backgroundColor: '#4EB100',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    margin: 10,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
 

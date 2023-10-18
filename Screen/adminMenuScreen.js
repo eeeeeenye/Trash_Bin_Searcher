@@ -1,28 +1,27 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-
-const RegisterScreen = () => {
+const AdminMenuScreen = () => {
   const navigation = useNavigation();
 
   const handleRegisterPress = () => {
-    navigation.navigate('CameraScreen');
+    navigation.navigate('ADCA');
 
   };
 
   const handleDeletePress = () => {
-    navigation.navigate('ComplaintPage'); // 카메라 화면으로 이동
+    navigation.navigate('AdminCanDelete'); // 카메라 화면으로 이동
    
   };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={handleRegisterPress}>
-        <Text style={styles.buttonText}>등록하기</Text>
+        <Text style={styles.buttonText}>등록 관리</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleDeletePress}>
-        <Text style={styles.buttonText}>삭제하기</Text>
+        <Text style={styles.buttonText}>삭제 관리</Text>
       </TouchableOpacity>
     </View>
   );
@@ -49,5 +48,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-export default RegisterScreen;
+export default AdminMenuScreen;

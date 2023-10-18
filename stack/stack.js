@@ -10,19 +10,44 @@ import TrashBinRegistration from '../Screen/trashBinRegistration';
 import CameraScreen from '../Screen/cameraScreen';
 import SearchCan from '../Screen/searchCanScreen';
 import LocationSearch from '../Screen/locationSearch';
+import LoginScreen from '../Screen/LoginScreen';
+import AdminScreen from '../Screen/adminScreen';
 const Stack = createNativeStackNavigator();
 
 const Stacknav = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+       
         <Stack.Screen
           options={{
             headerShown: false,
           }}
           name="MenuScreen"
           component={MenuScreen}
+        /> 
+        
+        <Stack.Screen 
+         options={{
+          headerTitle: '로그인',
+          headerTitleAlign: 'center', 
+        }}
+
+        name="Login" 
+        component={LoginScreen}
+         />
+
+        <Stack.Screen 
+         options={{
+          headerTitle: '관리자 화면',
+          headerTitleAlign: 'center', 
+        }}
+
+        name="AdminScreen" 
+        component={AdminScreen} 
         />
+
+
         <Stack.Screen
           options={{
             headerShown: true,
@@ -30,6 +55,7 @@ const Stacknav = () => {
           name="SearchCan"
           component={SearchCan}
         />
+
         <Stack.Screen
           options={{
             headerShown: true,
@@ -37,14 +63,17 @@ const Stacknav = () => {
           name="LocationSearch"
           component={LocationSearch}
         />
+
         <Stack.Screen
           options={{
             headerTitle: '삭제민원',
             headerTitleAlign: 'center', 
           }}
+
           name="ComplaintPage"
           component={ComplaintPage}
         />
+
          <Stack.Screen
           options={{
             headerTitle: '쓰레기통 등록',
@@ -53,6 +82,7 @@ const Stacknav = () => {
           name="trashBinRegistration"
           component={TrashBinRegistration}
         />
+
         <Stack.Screen
           options={{
             headerTitle: '?Wbin',
@@ -64,6 +94,7 @@ const Stacknav = () => {
           name="CameraScreen"
           component={CameraScreen}
         />
+
         <Stack.Screen
           options={{
             headerTitle: '?Wbin',
@@ -72,6 +103,7 @@ const Stacknav = () => {
               fontSize: 30
             },
           }}
+
           name="RegisterScreen" // 화면 이름 수정
           component={RegisterScreen}
         />

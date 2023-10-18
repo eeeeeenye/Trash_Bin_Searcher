@@ -17,6 +17,9 @@ const MenuScreen = () => {
     const locationSearchPress = () => {
       navigation.navigate('LocationSearch');
     };
+    const handleLoginPress = () => {
+      navigation.navigate('Login');
+    };
   return (
     <View style={styles.container}>
      
@@ -30,6 +33,9 @@ const MenuScreen = () => {
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleRegisterPress}>
         <Text style={styles.buttonText}>쓰레기통 위치 등록</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleLoginPress}>
+        <Text style={styles.buttonText}>관리자 접속</Text>
       </TouchableOpacity>
     </View>
   );

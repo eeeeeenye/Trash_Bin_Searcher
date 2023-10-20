@@ -11,6 +11,7 @@ import CameraScreen from '../Screen/cameraScreen';
 import SearchCan from '../Screen/searchCanScreen';
 import LocationSearch from '../Screen/locationSearch';
 import LoginScreen from '../Screen/loginScreen';
+import SelectLocation from '../Screen/selectLocation';
 import AdminMenuScreen from '../Screen/adminMenuScreen';
 import AdminCanAdd from '../Screen/adminCanAddScreen';
 const Stack = createNativeStackNavigator();
@@ -36,6 +37,15 @@ const Stacknav = () => {
 
         name="Login" 
         component={LoginScreen}
+         />
+         <Stack.Screen 
+         options={{
+          headerTitle: '지역 선택',
+          headerTitleAlign: 'center', 
+        }}
+
+        name="select" 
+        component={SelectLocation}
          />
         <Stack.Screen 
          options={{

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView , StyleSheet} from "react-native";
 import trashData from "../testData/trashData";
 
-const AdminCanAdd = () => {
+const AdminCanAdd= ({ route }) => {
   const [data, setData] = useState(trashData);
-
+  const { cityName } = route.params;//선택된 도시 이름 불러옴
   const toggleRegistration = (index) => {
     setData((prevData) =>
       prevData.map((item, i) =>
@@ -15,6 +15,7 @@ const AdminCanAdd = () => {
 
   return (
     <ScrollView>
+      <Text style={styles.text}>Selected city: {cityName}</Text>
       {data.map((item, index) => (
         <TouchableOpacity onPress={() => toggleRegistration(index)} key={index}>
           <View
@@ -38,5 +39,10 @@ const AdminCanAdd = () => {
     </ScrollView>
   );
 };
+const styles = StyleSheet.create({
+  text: {
+    fontSize: 20
+  }
+});
 
 export default AdminCanAdd;

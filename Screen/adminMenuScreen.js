@@ -6,7 +6,7 @@ const AdminMenuScreen = () => {
   const navigation = useNavigation();
 
   const handleRegisterPress = () => {
-    navigation.navigate('ADCA');
+    navigation.navigate('select');
 
   };
 

@@ -1,0 +1,8 @@
+"compileOptions":{
+    "compilerOptions": {
+        "module": "ES6",
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

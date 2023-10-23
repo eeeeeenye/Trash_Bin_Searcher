@@ -1,8 +1,8 @@
 const router = require('express').Router
-const controller = require('../controllers/post')
+const controller = require('../controllers/post.ts')
 
-router.post('/bin_post')
-router.post('/bin_del_post')
-router.get('/post_read')
+router.post('/bin_post',controller.postingController)
+router.post('/bin_del_post',controller.postdelController)
+router.get('/post_read',controller.postReadController)
 
 module.exports = router

@@ -12,12 +12,17 @@ module.exports = {
             }
 
             const database = await db.run();
-            const collection = database.collection('super_bin');
+            const superbin = database.collection('super_bin');
+            const other = database.collection('Seoul_trashbin')
 
             const query = {
                 region: state,
                 city: city,
             };
+
+            const query2 = {
+                
+            }
 
             if (city2) {
                 query.city2 = city2;
@@ -34,7 +39,7 @@ module.exports = {
     // 클라이언트를 통해서 내 위치 데이터(위도, 경도)를 가져옴
     myLocControl: async (req, res) => {
         try {
-            const { myLoc } = req.body;
+            const myLoc = req.body;
             const { longitude, latitude } = myLoc;
 
             const database = await db.run();

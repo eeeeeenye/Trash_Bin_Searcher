@@ -29,6 +29,7 @@ app.get('/', (req, res) => {
 
 /* 라우터 코드 추가 */
 app.use('/search',searchRouter)
+app.use(express.urlencoded({extended: true}))
 
 /* 서버 포트 연결 */
 app.listen(app.get('port'), () => {

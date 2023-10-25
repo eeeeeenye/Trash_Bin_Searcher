@@ -1,5 +1,5 @@
 import React from 'react';
-import Stack from './stack/stack';
+import Stack from './Navigator/stack';
 import CoodData from './component/coodData';
 import * as Location from "expo-location";
 

@@ -30,11 +30,28 @@ module.exports = {
     },
 
     // 작성된 게시글 삭제
-    postdelController: async(req, res) =>{
-        try{
+    postdelController: async (req, res) => {
+        try {
+            const postId = req.params.postId; // 게시글 ID를 요청에서 가져옴
 
-        }catch(error){
+            if (!postId) {
+                return res.status(400).json({ error: '게시글 ID가 필요합니다' });
+            }
 
+            const database = await db.run();
+            const collection = database.collection("post");
+
+        // 게시글 ID를 사용하여 해당 게시글을 삭제
+            const result = await collection.deleteOne({ _id: ObjectId(postId) });
+
+            if (result.deletedCount === 1) {
+                res.json({ message: '게시글 삭제 성공' });
+            } else {
+                res.status(404).json({ error: '게시글을 찾을 수 없습니다' });
+            }
+        } catch (error) {
+            console.error("Error: ", error);
+            res.status(500).json({ error: '내부 서버 오류' });
         }
     },
 

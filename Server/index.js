@@ -7,6 +7,7 @@ const path = require('path')
 const db = require('./db.ts')
 
 const searchRouter = require('./routes/search.js')
+const postRouter = requirre('./routes/post')
 
 /* 포트설정 */
 app.set('port', process.env.PORT || 8080)
@@ -30,6 +31,7 @@ app.get('/', (req, res) => {
 /* 라우터 코드 추가 */
 app.use('/search',searchRouter)
 app.use(express.urlencoded({extended: true}))
+app.use('/post',postRouter)
 
 /* 서버 포트 연결 */
 app.listen(app.get('port'), () => {

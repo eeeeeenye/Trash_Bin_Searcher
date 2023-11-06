@@ -15,7 +15,7 @@ const ComplaintPage = () => {
   const handleAddPhoto = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      alert('카메라 롤 권한이 필요합니다.');
+      alert('카메라 권한이 필요합니다.');
       return;
     }
 

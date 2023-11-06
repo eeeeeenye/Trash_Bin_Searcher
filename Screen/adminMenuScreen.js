@@ -11,7 +11,7 @@ const AdminMenuScreen = () => {
   };
 
   const handleDeletePress = () => {
-    navigation.navigate('AdminCanDelete'); // 카메라 화면으로 이동
+    navigation.navigate('selectD'); // 카메라 화면으로 이동
    
   };
 

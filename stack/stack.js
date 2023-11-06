@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MenuScreen from '../Screen/menuScreen';
 import RegisterScreen from '../Screen/registerScreen';
-import ComplaintPage from '../Screen/compaintPage';
+import ComplaintPage from '../Screen/complaintPage';
 import TrashBinRegistration from '../Screen/trashBinRegistration';
 import CameraScreen from '../Screen/cameraScreen';
 import SearchCan from '../Screen/searchCanScreen';
@@ -14,6 +14,8 @@ import LoginScreen from '../Screen/loginScreen';
 import SelectLocation from '../Screen/selectLocation';
 import AdminMenuScreen from '../Screen/adminMenuScreen';
 import AdminCanAdd from '../Screen/adminCanAddScreen';
+import AdminCanDelete from '../Screen/adminCanDeleteScreen';
+import SelectLocationD from '../Screen/selectLocationD';
 const Stack = createNativeStackNavigator();
 
 const Stacknav = () => {
@@ -47,6 +49,17 @@ const Stacknav = () => {
         name="select" 
         component={SelectLocation}
          />
+
+        <Stack.Screen 
+         options={{
+          headerTitle: '지역 선택',
+          headerTitleAlign: 'center', 
+        }}
+
+        name="selectD" 
+        component={SelectLocationD}
+         />
+
         <Stack.Screen 
          options={{
           headerTitle: '등록관리',
@@ -55,6 +68,16 @@ const Stacknav = () => {
 
         name="ADCA" 
         component={AdminCanAdd}
+         />
+
+        <Stack.Screen 
+         options={{
+          headerTitle: '삭제관리',
+          headerTitleAlign: 'center', 
+        }}
+
+        name="ADCD" 
+        component={AdminCanDelete}
          />
         <Stack.Screen 
          options={{

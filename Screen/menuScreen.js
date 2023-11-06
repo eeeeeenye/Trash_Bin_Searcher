@@ -32,7 +32,7 @@ const MenuScreen = () => {
         <Text style={styles.buttonText}onPress={SearchPress}>내 주변 쓰레기통</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleRegisterPress}>
-        <Text style={styles.buttonText}>쓰레기통 위치 등록</Text>
+        <Text style={styles.buttonText}>쓰레기통 위치 등록, 삭제</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleLoginPress}>
         <Text style={styles.buttonText}>관리자 접속</Text>

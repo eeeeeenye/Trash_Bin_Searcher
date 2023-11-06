@@ -60,20 +60,25 @@ module.exports = {
         }
     },
 
-    // 작성된 게시글 읽기
-    postReadController: async(req, res) =>{
-        try{
-            const database = await run();
-            const city = req.body;
-            const post_collec = database.collection('post')
-
+    postReadController: async (req, res) => {
+        try {
+            const database = await db.run();
+            const post_collec = database.collection('post');
+    
+            // 클라이언트로부터 받은 지역 정보 (예: "서울", "부산", 등)
+            const region = req.body.region;
+    
             const postData = await post_collec
-            .find({
-                
-            })
-
-        }catch(error){
-
+                .find({
+                    address: region, // 여기에 지역 정보를 검색 조건으로 사용
+                })
+                .toArray();
+    
+            res.json(postData); // 조회된 데이터를 클라이언트에 JSON 형식으로 응답
+        } catch (error) {
+            console.error("Error: ", error);
+            res.status(500).json({ error: 'Internal Server Error' });
         }
     }
+    
 }

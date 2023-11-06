@@ -7,7 +7,7 @@ const path = require('path')
 const db = require('./db.ts')
 
 const searchRouter = require('./routes/search.js')
-const postRouter = requirre('./routes/post')
+const postRouter = require('./routes/post.js')
 
 /* 포트설정 */
 app.set('port', process.env.PORT || 8080)

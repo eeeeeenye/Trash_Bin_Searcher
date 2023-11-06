@@ -6,9 +6,14 @@ module.exports = {
     // 작성된 게시글 저장
     postingController: async(req, res)=>{
         try{
-            const {address, add_address, latitude, longitude, date, options} = req.body
+            const {address, add_address, latitude, longitude, date, options,type} = req.body
             const database = await db.run();
-            const collection = database.collection("post")
+            let collection = database.collection("post")
+
+            //type에 따라서 게시글을 따로 저장
+            if(type === 'delete'){
+                collection = database.collection("post_delete")
+            }
 
             const result = await collection.insertOne({
                 address,
@@ -18,7 +23,7 @@ module.exports = {
                     coordinates: [longitude, latitude],
                 },
                 date,
-                options
+                options,
             })
 
             res.json({message: 'posting success'})
@@ -59,6 +64,13 @@ module.exports = {
     postReadController: async(req, res) =>{
         try{
             const database = await run();
+            const city = req.body;
+            const post_collec = database.collection('post')
+
+            const postData = await post_collec
+            .find({
+                
+            })
 
         }catch(error){
 

@@ -1,4 +1,4 @@
-const router = require('express').Router
+const router = require('express').Router();
 const controller = require('../controllers/post.ts')
 
 router.post('/bin_post',controller.postingController)

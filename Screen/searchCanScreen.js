@@ -1,14 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
+import axios from 'axios';
 import { View, Text, StyleSheet, TextInput, Dimensions, TouchableOpacity,Alert, SafeAreaView, Image } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAvoidingView } from 'react-native';
 import CoodData from "../component/coodData";
-const API_KEY = "";
+const API_KEY = "AIzaSyC3k7HBbhN327lvM3fyx006TZ3bHcYS9KY";
 const deviceWidth = Dimensions.get("window").width;
 
 const SearchCan = () => {
- 
+  
+  useEffect(() => {
+    console.log(CoodData.latitude);
+    console.log(CoodData.longitude);
+    const fetchData = async () => {
+        var response = await axios.post("http://10.20.100.250:3030/search/bin_read_myloc", {
+          latitude: CoodData.latitude,
+          longitude: CoodData.longitude
+        });
+        console.log(response.data); 
+    };
+    fetchData();
+  }, []);
+  
+  
+
   const navigation = useNavigation();
   const [address, setAddress] = React.useState("");
   const [latitude, setLatitude] = React.useState(0);

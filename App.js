@@ -5,14 +5,19 @@ import * as Location from "expo-location";
 
 
 const App = () => {
+
+React.useEffect(()=>{
+  async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      console.log("Permission to access location was denied");
+      return;
+    }
+}},[CoodData.latitude,CoodData.longitude])
+
+
   React.useEffect(() => {
     (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
-        return;
-      }
-
       const {
         coords: { latitude, longitude },
       } = await Location.getCurrentPositionAsync(); //위치정보중 latitude와 longitude만을 받아오는 함수

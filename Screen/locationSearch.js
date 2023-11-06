@@ -13,7 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 
 const deviceWidth = Dimensions.get("window").width;
-const API_KEY = "";
+const API_KEY = "AIzaSyC3k7HBbhN327lvM3fyx006TZ3bHcYS9KY";
 
 
 const specialCities = [

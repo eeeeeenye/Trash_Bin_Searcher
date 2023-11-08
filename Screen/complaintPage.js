@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-
+import axios from 'axios';
 const ComplaintPage = () => {
   const [title, setTitle] = useState('');
   const [location, setLocation] = useState('');
@@ -35,8 +35,31 @@ const ComplaintPage = () => {
     }
   };
 
-  const handleSubmit = () => {
-    console.log('민원을 서버로 전송합니다.');
+  const handleSubmit = async () => {
+      try {
+        const payload = {
+          title:title,
+          address: location,
+          text: content,
+          date: date,
+          photos: photos, // Assuming options is equivalent to binType
+        };
+        console.log(payload)
+        
+    
+        const response = await axios.post("http://10.20.102.193:3030/post/bin_del_post ", payload);
+    
+        if (response.status === 200) {
+          console.log('쓰레기통이 민원이 성공적으로 등록되었습니다.');
+          // You can add any other logic here, like redirecting to another screen or showing a success message.
+        } else {
+          console.log('쓰레기통 민원 등록에 실패하였습니다.');
+        }
+      } catch (error) {
+        console.error('Error while registering trash bin:', error.message);
+      }
+  
+    
   };
 
   return (

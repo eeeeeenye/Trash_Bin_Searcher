@@ -4,35 +4,46 @@ module.exports = {
     // 게시글 관리
 
     // 작성된 게시글 저장
-    postingController: async(req, res)=>{
-        try{
-            const {address, add_address, latitude, longitude, date, options,type} = req.body
-            const database = await db.run();
-            let collection = database.collection("post")
-
-            //type에 따라서 게시글을 따로 저장
-            if(type === 'delete'){
-                collection = database.collection("post_delete")
-            }
-
+    postingController: async (req, res) => {
+        try {
+          const data = req.body;
+          const database = await db.run();
+          let collection = database.collection("post");
+      
+          if (data.type === 'create') {
             const result = await collection.insertOne({
-                address,
-                add_address,
-                location: {
-                    type: "Point",
-                    coordinates: [longitude, latitude],
-                },
-                date,
-                options,
-            })
-
-            res.json({message: 'posting success'})
-            // db에 데이터 저장
-        }catch(error){
-            console.error("Error: ",error)
-            res.status(500).json({error: 'Internal Server Error'})
+              img: data.img,
+              address: data.address,
+              add_address: data.add_address,
+              location: {
+                type: "Point",
+                coordinates: [data.longitude, data.latitude],
+              },
+              date: data.date,
+              options: data.options,
+            });
+      
+            res.json({ message: 'create posting success' });
+            // 데이터베이스에 데이터 저장
+          } else if (data.type === 'delete') {
+            const result = await collection.insertOne({
+                title: data.title,
+                address: data.address,
+                date: data.date,
+                content: data.options,
+              });
+        
+              res.json({ message: 'delete posting success' });
+          } else {
+            // 다른 유형의 작업을 처리하는 코드 추가
+            console.error("Error: There is no type in database.");
+          }
+        } catch (error) {
+          console.error("Error: ", error);
+          res.status(500).json({ error: 'Internal Server Error' });
         }
-    },
+      },
+      
 
     // 작성된 게시글 삭제
     postdelController: async (req, res) => {
@@ -70,7 +81,7 @@ module.exports = {
     
             const postData = await post_collec
                 .find({
-                    address: region, // 여기에 지역 정보를 검색 조건으로 사용
+                    add_address: region, // 여기에 지역 정보를 검색 조건으로 사용
                 })
                 .toArray();
     

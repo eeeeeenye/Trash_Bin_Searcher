@@ -23,7 +23,7 @@ const Stacknav = () => {
     <NavigationContainer>
       <Stack.Navigator>
        
-        <Stack.Screen
+        <Stack.Screen  
           options={{
             headerShown: false,
           }}

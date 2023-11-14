@@ -88,7 +88,7 @@ const SearchCan = () => {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "http://10.20.104.20:8080/search/bin_read_myloc",
+          "http://10.20.104.126:8080/search/bin_read_myloc",
           {
             latitude: CoodData.latitude,
             longitude: CoodData.longitude,

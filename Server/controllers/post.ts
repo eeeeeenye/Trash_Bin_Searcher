@@ -25,6 +25,7 @@ module.exports = {
       
             res.json({ message: 'create posting success' });
             // 데이터베이스에 데이터 저장
+            // 삭제 민원 사진 최대 4장 등록가능 수정 필요
           } else if (data.type === 'delete') {
             const result = await collection.insertOne({
                 title: data.title,

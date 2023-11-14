@@ -1,8 +1,9 @@
 // TrashBinRegistration.js
 import React, { useState } from 'react';
+import axios from 'axios';
 import { View, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Text } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-
+import {Picker} from '@react-native-picker/picker';
 const TrashBinRegistration = () => {
   
   const formatLocationString = (location) => {
@@ -15,18 +16,41 @@ const TrashBinRegistration = () => {
 
   const [address, setAddress] = useState('');
   const [detailAddress, setDetailAddress] = useState('');
-  const [applicationDate, setApplicationDate] = useState('');
-  const [binType, setBinType] = useState('');
+  const [selectedTrashType, setSelectedTrashType] = useState('');
   const route = useRoute();
   const capturedImage = route.params?.capturedImage;
   const location = route.params?.location;
-
+  const now = new Date();
+  const formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+  const [date, setDate] = useState(formattedDate);
   const locationString = formatLocationString(location);
 
-  const handleRegister = () => {
-    // 쓰레기통 등록 로직 추가
-    console.log('쓰레기통을 등록합니다.');
+  const handleRegister = async () => {
+    try {
+      const payload = {
+        address: locationString,
+        add_address: detailAddress,
+        latitude: capturedImage.latitude, // Assuming the location object has latitude and longitude
+        longitude: capturedImage.longitude,
+        date: date,
+        options: selectedTrashType, // Assuming options is equivalent to binType
+      };
+      console.log(payload)
+      
+  
+      const response = await axios.post("http://192.168.123.106:3030/post/bin_post", payload);
+  
+      if (response.status === 200) {
+        console.log('쓰레기통이 성공적으로 등록되었습니다.');
+        // You can add any other logic here, like redirecting to another screen or showing a success message.
+      } else {
+        console.log('쓰레기통 등록에 실패하였습니다.');
+      }
+    } catch (error) {
+      console.error('Error while registering trash bin:', error.message);
+    }
   };
+  
 
   return (
 
@@ -60,18 +84,24 @@ const TrashBinRegistration = () => {
           <TextInput
             style={[styles.input, { borderColor: '#D9D9D9' }]}
             placeholder="신청 날짜를 입력하세요."
-            value={applicationDate}
-            onChangeText={setApplicationDate}
+            value={date}
+            onChangeText={setDate}
           />
         </View>
         <View style={styles.inputRow}>
           <Text >쓰레기통 종류</Text>
-          <TextInput
+          <Picker
+            selectedValue={selectedTrashType}
             style={[styles.input, { borderColor: '#D9D9D9' }]}
-            placeholder="쓰레기통 종류를 입력하세요."
-            value={binType}
-            onChangeText={setBinType}
-          />
+            onValueChange={(itemValue, itemIndex) =>
+              setSelectedTrashType(itemValue)
+            }
+          >
+            <Picker.Item label="Select Trash Type" value="" />
+            <Picker.Item label="일반" value="일반" />
+            <Picker.Item label="재활용" value="재활용" />
+            {/* Add more trash types as needed */}
+          </Picker>
         </View>
         <View style={styles.disclaimer}>
           <Image source={require('../assets/rightEye.png')} style={styles.disclaimerIcon} />

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text ,Image} from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
@@ -17,22 +17,6 @@ const CameraScreen = () => {
     })();
   }, []);
 
-  const getLocationFromImage = async (imageUri) => {
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Location permission denied');
-        return null;
-      }
-
-      const location = await Location.reverseGeocodeAsync({ latitude: 0, longitude: 0 });
-      return location[0];
-    } catch (error) {
-      console.error('Error getting location from image:', error);
-      return null;
-    }
-  };
-
   const handleTakePicture = async () => {
     if (cameraRef.current) {
       const options = { quality: 0.5, base64: true };
@@ -45,14 +29,15 @@ const CameraScreen = () => {
       }
   
       const { coords } = await Location.getCurrentPositionAsync({});
+      console.log('Latitude:', coords.latitude, 'Longitude:', coords.longitude); // 좌표 로그로 출력
+  
       const location = await Location.reverseGeocodeAsync({
         latitude: coords.latitude,
         longitude: coords.longitude,
       });
-  
-      console.log('Location:', location);
-  
-      const capturedImageData = { uri: data.uri, location };
+      console.log("좌표",location)
+      const capturedImageData = { uri: data.uri, location, latitude: coords.latitude,
+        longitude: coords.longitude,};
       console.log('Captured Image Data:', capturedImageData);
   
       setCapturedImage(capturedImageData);
@@ -61,12 +46,13 @@ const CameraScreen = () => {
   
   
   
+  
 
   const handleProceed = () => {
     if (capturedImage) {
       navigation.navigate('trashBinRegistration', {
         capturedImage,
-        location: capturedImage.location
+        location: capturedImage.location,
         
       });console.log(capturedImage.location)
     }
@@ -83,12 +69,22 @@ const CameraScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Camera
-        ref={cameraRef}
-        style={styles.preview}
-        type={Camera.Constants.Type.back}
-        flashMode={Camera.Constants.FlashMode.on}
-      />
+       {!capturedImage && hasPermission && (
+        <Camera
+          ref={cameraRef}
+          style={styles.preview}
+          type={Camera.Constants.Type.back}
+          flashMode={Camera.Constants.FlashMode.off}
+        />
+      )}
+      {capturedImage && (
+        <View style={styles.capturedImageContainer}>
+          <Image
+            source={{ uri: capturedImage.uri }}
+            style={styles.capturedImage}
+          />
+        </View>
+      )}
       <View>
         <TouchableOpacity onPress={handleTakePicture} style={styles.capture}>
           <Text style={styles.captureText}>사진 찍기</Text>
@@ -133,6 +129,15 @@ const styles = StyleSheet.create({
   proceedText: {
     color: '#fff',
     fontSize: 20,
+  },
+  capturedImageContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  capturedImage: {
+    width: 250,
+    height: 250,
+    borderRadius: 10,
   },
 });
 

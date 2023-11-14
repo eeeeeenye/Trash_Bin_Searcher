@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
-import { Modalize } from 'react-native-modalize';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import { Modalize } from "react-native-modalize";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
   View,
   Text,
@@ -14,27 +14,26 @@ import {
   Image,
   Platform,
   KeyboardAvoidingView,
-} from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { useNavigation } from '@react-navigation/native';
-import CoodData from '../component/coodData';
+} from "react-native";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { useNavigation } from "@react-navigation/native";
+import CoodData from "../component/coodData";
 
 const API_KEY = "AIzaSyC3k7HBbhN327lvM3fyx006TZ3bHcYS9KY"; // Use your actual API key
-const deviceWidth = Dimensions.get('window').width;
-const deviceHeight = Dimensions.get('window').height;
-
-
+const deviceWidth = Dimensions.get("window").width;
+const deviceHeight = Dimensions.get("window").height;
 
 const SearchCan = () => {
   const navigation = useNavigation();
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState("");
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [selectedSearchWay, setSelectedSearchWay] = useState(true);
   const [markerInfo, setMarkerInfo] = useState({});
+  const [responseDatas, setResponseDatas] = useState([]);
   const modalRef = useRef(null);
-  const trashCategory = ['재활용만', '일반\n쓰레기만', '모두'];
-  
+  const trashCategory = ["재활용만", "일반\n쓰레기만", "모두"];
+
   const dummydatas = [
     {
       idx: 3,
@@ -84,17 +83,29 @@ const SearchCan = () => {
       reg_at: 1517887658000,
     },
   ];
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "http://your-endpoint-here/search/bin_read_myloc",
+          "http://10.20.104.20:8080/search/bin_read_myloc",
           {
             latitude: CoodData.latitude,
             longitude: CoodData.longitude,
           }
         );
+
+        const extractedData = response.data.map((item) => ({
+          _id: item._id,
+          address: item.address,
+          location: item.location,
+          name: item.name,
+          input_wastes: item.input_wastes,
+          image_url: item.image_url,
+        }));
+
+        setResponseDatas(extractedData);
+
         console.log(response.data);
       } catch (error) {
         console.log(error);
@@ -124,8 +135,6 @@ const SearchCan = () => {
     return parts.join("/");
   };
 
- 
-
   const handleAddressSubmit = async () => {
     try {
       const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
@@ -133,7 +142,7 @@ const SearchCan = () => {
       )}&key=${API_KEY}`;
       const response = await axios.get(url);
       const data = response.data;
-      
+
       if (data.results.length > 0) {
         const { lat, lng } = data.results[0].geometry.location;
         setLatitude(lat);
@@ -169,7 +178,7 @@ const SearchCan = () => {
       return "canAndPet";
     } else if (arr.includes("투명 페트")) {
       return "pet";
-    } else if (arr.includes("pp")) {
+    } else if (arr.includes("무색 PP")) {
       return "pp";
     } else {
       return "";
@@ -183,7 +192,7 @@ const SearchCan = () => {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
       <GestureHandlerRootView style={styles.flexContainer}>
@@ -212,18 +221,36 @@ const SearchCan = () => {
               onPress={() => handleMarker(dummydata)}
             />
           ))}
+          {responseDatas.length > 0 &&
+            responseDatas.map((realData) => (
+              <Marker
+                key={realData._id}
+                coordinate={{
+                  latitude: realData.location.coordinates[1], // 위도
+                  longitude: realData.location.coordinates[0], // 경도
+                }}
+                image={imageMapping[imageReturn(realData.input_wastes)]} // 이미지 URL 사용
+                title={realData.name}
+                description={realData.address}
+                onPress={() => handleMarker(realData)}
+              />
+            ))}
         </MapView>
 
         <View style={styles.tabContainer}>
           <TouchableOpacity
             onPress={() => setSelectedSearchWay(true)}
-            style={selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab}
+            style={
+              selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab
+            }
           >
             <Text style={styles.tabText}>직접 입력</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate('LocationSearch')}
-            style={!selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab}
+            onPress={() => navigation.navigate("LocationSearch")}
+            style={
+              !selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab
+            }
           >
             <Text style={styles.tabText}>지역 검색</Text>
           </TouchableOpacity>
@@ -235,8 +262,14 @@ const SearchCan = () => {
           value={address}
           onChangeText={setAddress}
         />
-        <TouchableOpacity onPress={handleAddressSubmit} style={styles.searchIconContainer}>
-          <Image source={require("../assets/search.png")} style={styles.searchIcon} />
+        <TouchableOpacity
+          onPress={handleAddressSubmit}
+          style={styles.searchIconContainer}
+        >
+          <Image
+            source={require("../assets/search.png")}
+            style={styles.searchIcon}
+          />
         </TouchableOpacity>
 
         <View style={styles.trashCategories}>
@@ -247,16 +280,23 @@ const SearchCan = () => {
           ))}
         </View>
 
-        <Modalize ref={modalRef} snapPoint={deviceHeight - 300} scrollViewProps={{ showsVerticalScrollIndicator: false }}>
+        <Modalize
+          ref={modalRef}
+          snapPoint={deviceHeight - 300}
+          scrollViewProps={{ showsVerticalScrollIndicator: false }}
+        >
           <ModalContent
-              encodeURL={encodeURLWithUnderscore}
-              marker={markerInfo}
-            />
+            encodeURL={encodeURLWithUnderscore}
+            marker={markerInfo}
+          />
         </Modalize>
 
         <View style={styles.bottomBar}>
           <TouchableOpacity onPress={handleMylocation}>
-            <Image source={require("../assets/circleB.png")} style={styles.circleIcon} />
+            <Image
+              source={require("../assets/circleB.png")}
+              style={styles.circleIcon}
+            />
           </TouchableOpacity>
         </View>
       </GestureHandlerRootView>
@@ -272,11 +312,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#E0E0E0',
-    position: 'absolute',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#E0E0E0",
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -284,32 +324,32 @@ const styles = StyleSheet.create({
   },
   tab: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 10,
   },
   selectedTab: {
-    backgroundColor: '#4EB100',
+    backgroundColor: "#4EB100",
   },
   tabText: {
-    color: 'black',
+    color: "black",
   },
   map: {
     ...StyleSheet.absoluteFillObject,
   },
   input: {
-    position: 'absolute',
+    position: "absolute",
     top: 60, // Adjusted for the tab bar
     left: 10,
     right: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     zIndex: 1,
   },
   searchIconContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 70, // Adjusted for the tab bar
     right: 20,
     zIndex: 2,
@@ -319,12 +359,11 @@ const styles = StyleSheet.create({
     height: 27,
   },
   trashCategories: {
-    position: 'absolute',
+    position: "absolute",
     top: 110, // Adjusted for the input field
     left: 10,
     zIndex: 1,
-    flexDirection: 'row',
-    
+    flexDirection: "row",
   },
   trashCategory: {
     width: 36,
@@ -342,17 +381,17 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   bottomBar: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
-    height:50,
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: 50,
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     borderTopWidth: 1,
-    borderTopColor: '#ccc',
+    borderTopColor: "#ccc",
   },
   circleIcon: {
     width: 45,
@@ -363,11 +402,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   image: {
-    width: '100%',
+    width: "100%",
     height: 200,
     borderRadius: 10,
     marginBottom: 10,
@@ -441,6 +480,4 @@ function InfoRow({ icon, title, content }) {
   );
 }
 
-
 export default SearchCan;
-

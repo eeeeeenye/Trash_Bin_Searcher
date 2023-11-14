@@ -3,7 +3,7 @@ const db = require("../db.ts");
 module.exports = {
     // 쓰레기통 검색 코드
 
-    // 지역별 선택 시 해당 지역 데이터 가져옴 (현재 super bin 만)
+    // 지역별 선택 시 해당 지역 데이터 가져옴
     regionControl: async (req, res) => {
         try {
             const { state, city, city2 } = req.body;
@@ -38,6 +38,7 @@ module.exports = {
     },
 
     // 클라이언트를 통해서 내 위치 데이터(위도, 경도)를 가져옴
+    // seoul trash 도 추가해야 함
     myLocControl: async (req, res) => {
         try {
             const myLoc = req.body;

@@ -39,7 +39,7 @@ const Stacknav = () => {
         />
         <Stack.Screen
           options={{
-            headerTitle: '민원',
+            headerTitle: '삭제민원',
             headerTitleAlign: 'center', 
           }}
           name="ComplaintPage"

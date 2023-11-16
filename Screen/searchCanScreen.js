@@ -83,39 +83,42 @@ const SearchCan = () => {
       reg_at: 1517887658000,
     },
   ];
+  const fetchData = async (lat, lng) => {
+    try {
+      const response = await axios.post(
+        "http://10.20.104.44:8080/search/bin_read_myloc",
+        {
+          latitude: lat,
+          longitude: lng,
+        }
+      );
 
+      const extractedData = response.data.map((item) => ({
+        _id: item._id,
+        address: item.address,
+        location: item.location,
+        name: item.name,
+        input_wastes: item.input_wastes,
+        image_url: item.image_url,
+      }));
+
+      setResponseDatas(extractedData);
+
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "http://10.20.104.20:8080/search/bin_read_myloc",
-          {
-            latitude: CoodData.latitude,
-            longitude: CoodData.longitude,
-          }
-        );
-
-        const extractedData = response.data.map((item) => ({
-          _id: item._id,
-          address: item.address,
-          location: item.location,
-          name: item.name,
-          input_wastes: item.input_wastes,
-          image_url: item.image_url,
-        }));
-
-        setResponseDatas(extractedData);
-
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
+    if (latitude == 0 || longitude == 0) {
+      fetchData(CoodData.latitude, CoodData.longitude);
+    } else {
+      fetchData(latitude, longitude);
+    }
+  }, [latitude, longitude]);
 
   const encodeURLWithUnderscore = (url) => {
-    if (url === "") {
+    if (!url) {
       return "../assets/nephron_default.png";
     }
     const parts = url.split("/");
@@ -131,7 +134,7 @@ const SearchCan = () => {
     const removeTrailingUnderscore = addUnderscoreAfterNumber.replace(/_$/, "");
 
     parts[parts.length - 1] = removeTrailingUnderscore;
-
+    console.log("url ", parts.join("/"));
     return parts.join("/");
   };
 
@@ -263,7 +266,10 @@ const SearchCan = () => {
           onChangeText={setAddress}
         />
         <TouchableOpacity
-          onPress={handleAddressSubmit}
+          onPress={() => {
+            handleAddressSubmit();
+            fetchData(latitude, longitude);
+          }}
           style={styles.searchIconContainer}
         >
           <Image
@@ -418,9 +424,10 @@ const styles = StyleSheet.create({
 });
 
 function ModalContent({ encodeURL, marker }) {
-  if (marker == null) {
+  if (!marker) {
     return <Text>"data isn't exist"</Text>;
   }
+  const inputWastes = marker.input_wastes || [];
   if (marker) {
     return (
       <ScrollView contentContainerStyle={styles.modalContent}>
@@ -434,10 +441,10 @@ function ModalContent({ encodeURL, marker }) {
             }}
           />
         )}
-        {marker.imageurl.length > 0 && (
+        {marker.imageurl != "" && (
           <Image
             source={{
-              uri: encodeURL(marker.imageurl),
+              uri: encodeURL(marker.image_url),
             }}
             style={{
               width: deviceWidth - 30,
@@ -451,7 +458,7 @@ function ModalContent({ encodeURL, marker }) {
         <InfoRow
           icon="✔️"
           title="타입가능성"
-          content={marker.input_wastes.join(", ")}
+          content={inputWastes.length > 0 ? inputWastes.join(", ") : ""}
         />
         <InfoRow
           icon="⏰"

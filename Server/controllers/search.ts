@@ -18,7 +18,7 @@ module.exports = {
     
             const query = {
                 region_1: state,
-                address: city,
+                region_2: city,
             };
     
             // city2가 존재하면 query2에 추가
@@ -26,7 +26,8 @@ module.exports = {
     
             if (city2) {
                 seoulTrashbin = database.collection('Seoul_trashbin');
-                query2.city2 = city2;
+                query2.city = city;
+                query2.state = state;
             }
     
             const result1 = await superbin.find(query).toArray(); // super_bin 컬렉션에서 데이터 조회

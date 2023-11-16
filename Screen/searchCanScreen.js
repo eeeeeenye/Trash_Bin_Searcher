@@ -86,29 +86,34 @@ const SearchCan = () => {
   const fetchData = async (lat, lng) => {
     try {
       const response = await axios.post(
-        "http://10.20.104.44:8080/search/bin_read_myloc",
+        "http://192.168.1.18:8080/search/bin_read_myloc",
         {
           latitude: lat,
           longitude: lng,
         }
       );
-
-      const extractedData = response.data.map((item) => ({
-        _id: item._id,
-        address: item.address,
-        location: item.location,
-        name: item.name,
-        input_wastes: item.input_wastes,
-        image_url: item.image_url,
-      }));
-
-      setResponseDatas(extractedData);
-
       console.log(response.data);
+
+      // Check if superBinData is an array and then process it
+      if (Array.isArray(response.data.superBinData)) {
+        const extractedData = response.data.superBinData.map((item) => ({
+          _id: item._id,
+          address: item.address,
+          location: item.location,
+          name: item.name,
+          input_wastes: item.input_wastes,
+          image_url: item.image_url,
+        }));
+
+        setResponseDatas(extractedData);
+      } else {
+        console.log("superBinData is not an array or is undefined");
+      }
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
     if (latitude == 0 || longitude == 0) {
       fetchData(CoodData.latitude, CoodData.longitude);

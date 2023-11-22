@@ -24,10 +24,6 @@ const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Dimensions.get("window").height;
 
 const SearchCan = () => {
-<<<<<<< HEAD
-=======
-  
->>>>>>> fcdb019 (bottomB)
   const navigation = useNavigation();
   const [address, setAddress] = useState("");
   const [latitude, setLatitude] = useState(0);
@@ -203,7 +199,6 @@ const SearchCan = () => {
   };
 
   return (
-<<<<<<< HEAD
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
@@ -280,56 +275,14 @@ const SearchCan = () => {
             handleAddressSubmit();
             fetchData(latitude, longitude);
           }}
-=======
-    <SafeAreaView style={styles.container}>
-      {/* 지도 */}
-      <MapView
-        style={styles.map}
-        provider={PROVIDER_GOOGLE}
-        initialRegion={initialRegion}
-        showsUserLocation={true}
-        showsMyLocationButton={true}
-      />
-
-      {/* 상단 탭 */}
-      <View style={styles.tabContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            setSelectedSearchWay(true);
-          }}
-          style={selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab}
-        >
-          <Text style={styles.tabText}>직접 입력</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('LocationSearch');
-          }}
-          style={!selectedSearchWay ? [styles.tab, styles.selectedTab] : styles.tab}
-        >
-          <Text style={styles.tabText}>지역 검색</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* 나머지 컴포넌트들 */}
-      <View style={styles.otherComponents}>
-        {/* 검색 입력란 (위에 겹쳐 표시) */}
-        <TextInput placeholder="검색장소 입력" style={styles.input} />
-        <TouchableOpacity
-          // onPress={()=>{}}   --> 기능 추가 지오코딩 함수
->>>>>>> fcdb019 (bottomB)
           style={styles.searchIconContainer}
         >
           <Image
             source={require("../assets/search.png")}
             style={styles.searchIcon}
           />
-<<<<<<< HEAD
         </TouchableOpacity>
 
-=======
-        </TouchableOpacity>   
->>>>>>> fcdb019 (bottomB)
         <View style={styles.trashCategories}>
           {trashCategory.map((category, index) => (
             <TouchableOpacity key={index} style={styles.trashCategory}>
@@ -337,7 +290,6 @@ const SearchCan = () => {
             </TouchableOpacity>
           ))}
         </View>
-<<<<<<< HEAD
 
         <Modalize
           ref={modalRef}
@@ -352,25 +304,14 @@ const SearchCan = () => {
 
         <View style={styles.bottomBar}>
           <TouchableOpacity onPress={handleMylocation}>
-=======
-        
-        {/* 하단 바 */}
-        <View style={styles.bottomBar}>
-          <TouchableOpacity >
->>>>>>> fcdb019 (bottomB)
             <Image
               source={require("../assets/circleB.png")}
               style={styles.circleIcon}
             />
           </TouchableOpacity>
         </View>
-<<<<<<< HEAD
       </GestureHandlerRootView>
     </KeyboardAvoidingView>
-=======
-      </View>
-    </SafeAreaView>
->>>>>>> fcdb019 (bottomB)
   );
 };
 
@@ -406,7 +347,6 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-<<<<<<< HEAD
   input: {
     position: "absolute",
     top: 60, // Adjusted for the tab bar
@@ -428,12 +368,6 @@ const styles = StyleSheet.create({
   searchIcon: {
     width: 27,
     height: 27,
-=======
-  otherComponents: {
-    ...StyleSheet.absoluteFillObject,
-    top: 50,
-    bottom: 0, // 하단 공간 추가
->>>>>>> fcdb019 (bottomB)
   },
   trashCategories: {
     position: "absolute",
@@ -441,11 +375,6 @@ const styles = StyleSheet.create({
     left: 10,
     zIndex: 1,
     flexDirection: "row",
-<<<<<<< HEAD
-=======
-    marginBottom: 10,
-    marginLeft: 10, // 왼쪽 여백 추가
->>>>>>> fcdb019 (bottomB)
   },
   trashCategory: {
     width: 36,
@@ -496,40 +425,7 @@ const styles = StyleSheet.create({
   infoContent: {
     fontSize: 16,
   },
-<<<<<<< HEAD
   // ... any additional styles you may have ...
-=======
-  circleIcon: {
-    width: 45,
-    height: 45,
-  },
-  bottomBar: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 60, // 바의 높이
-    backgroundColor: "#fff",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 20, // 좌우 여백
-    borderTopWidth: 1,
-    borderTopColor: "#ccc",
-  },
-  circularButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "#4EB100",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-  },
->>>>>>> fcdb019 (bottomB)
 });
 
 function ModalContent({ encodeURL, marker }) {

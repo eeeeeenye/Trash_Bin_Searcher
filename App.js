@@ -1,21 +1,18 @@
-import React from 'react';
-<<<<<<< HEAD
-import Stack from './Navigator/stack';
-import CoodData from './component/coodData';
+import React from "react";
+import Stack from "./Navigator/stack";
+import CoodData from "./component/coodData";
 import * as Location from "expo-location";
 
-
 const App = () => {
-
-React.useEffect(()=>{
-  async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      console.log("Permission to access location was denied");
-      return;
-    }
-}},[CoodData.latitude,CoodData.longitude])
-
+  React.useEffect(() => {
+    async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        return;
+      }
+    };
+  }, [CoodData.latitude, CoodData.longitude]);
 
   React.useEffect(() => {
     (async () => {
@@ -27,11 +24,6 @@ React.useEffect(()=>{
       CoodData.longitude = longitude;
     })();
   }, []);
-=======
-import Stack from './stack/stack';
-
-const App = () => {
->>>>>>> c76bdef (Stack)
   return <Stack />;
 };
 

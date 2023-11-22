@@ -20,16 +20,18 @@ module.exports = {
                 region_1: state,
                 region_2: city,
             };
+
+            const query2 = {
+                state: state,
+                city: city,
+            };
     
     
             const result1 = await superbin.find(query).toArray(); // super_bin 컬렉션에서 데이터 조회
-            let result2 = [];
+            const result2 = await seoulTrashbin.find(query2).toArray(); // Seoul_trashbin 컬렉션에서 데이터 조회
     
-            if (seoulTrashbin) {
-                result2 = await seoulTrashbin.find(query2).toArray(); // Seoul_trashbin 컬렉션에서 데이터 조회
-            }
     
-            res.json({ super_bin: result1, Seoul_trashbin: result1 }); // 두 컬렉션의 결과를 하나의 JSON으로 응답
+            res.json({ super_bin: result1, Seoul_trashbin: result2 }); // 두 컬렉션의 결과를 하나의 JSON으로 응답
         } catch (error) {
             console.error('Error: ', error);
             res.status(500).json({ error: 'Internal Server Error' });

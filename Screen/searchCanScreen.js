@@ -87,18 +87,11 @@ const SearchCan = () => {
   const fetchData = async (lat, lng) => {
     try {
       const response = await axios.post(
-<<<<<<< HEAD
-        "http://10.20.102.229:3030/search/bin_read_myloc",
+        "http://10.20.102.134:3030/search/bin_read_myloc",
         {
           latitude: lat,
           longitude: lng,
           isSeoul: true
-=======
-        "http://10.20.36.205:8080/search/bin_read_myloc",
-        {
-          latitude: lat,
-          longitude: lng,
->>>>>>> ed2680de07602e3de7d4155265513063599d94e4
         }
       );
       console.log(response.data);
@@ -122,11 +115,8 @@ const SearchCan = () => {
         }));
 
         setResponseDatas(extractedData);
-<<<<<<< HEAD
         setResponseDatas2(extractedData2 )
         console.log(response.data.seoulData)
-=======
->>>>>>> ed2680de07602e3de7d4155265513063599d94e4
       } else {
         console.log("superBinData is not an array or is undefined");
       }

@@ -50,7 +50,6 @@ const ComplaintPage = () => {
   };
 
   const handleSubmit = async () => {
-<<<<<<< HEAD
       try {
         const payload = {
           uri:photos,
@@ -63,7 +62,7 @@ const ComplaintPage = () => {
         console.log(payload)
         
     
-        const response = await axios.post("http://10.20.102.207:3030/post/bin_post", payload);
+        const response = await axios.post("http://10.20.102.134:3030/post/bin_post", payload);
     
         if (response.status === 200) {
           console.log('쓰레기통이 민원이 성공적으로 등록되었습니다.');
@@ -73,32 +72,8 @@ const ComplaintPage = () => {
         }
       } catch (error) {
         console.error('Error while registering trash bin:', error.message);
-=======
-    try {
-      const payload = {
-        title: title,
-        address: location,
-        text: content,
-        date: date,
-        photos: photos, // Assuming options is equivalent to binType
-      };
-      console.log(payload);
-
-      const response = await axios.post(
-        "http://10.20.102.193:3030/post/bin_del_post ",
-        payload
-      );
-
-      if (response.status === 200) {
-        console.log("쓰레기통이 민원이 성공적으로 등록되었습니다.");
-        // You can add any other logic here, like redirecting to another screen or showing a success message.
-      } else {
-        console.log("쓰레기통 민원 등록에 실패하였습니다.");
->>>>>>> ed2680de07602e3de7d4155265513063599d94e4
       }
-    } catch (error) {
-      console.error("Error while registering trash bin:", error.message);
-    }
+
   };
 
   return (
@@ -145,17 +120,9 @@ const ComplaintPage = () => {
             <Image key={index} source={{ uri: photo }} style={styles.photo} />
           ))}
         </View>
-<<<<<<< HEAD
         {photos.length < 1 && <TouchableOpacity style={styles.button} onPress={handleAddPhoto}>
         <Text style={styles.buttonText}>사진 추가</Text>
         </TouchableOpacity>} 
-=======
-        {photos.length < 4 && (
-          <TouchableOpacity style={styles.button} onPress={handleAddPhoto}>
-            <Text style={styles.buttonText}>사진 추가</Text>
-          </TouchableOpacity>
-        )}
->>>>>>> ed2680de07602e3de7d4155265513063599d94e4
         <View style={styles.disclaimer}>
           <Image
             source={require("../assets/rightEye.png")}

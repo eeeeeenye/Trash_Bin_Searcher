@@ -22,13 +22,8 @@ module.exports = {
             };
 
             const query2 = {
-<<<<<<< HEAD
                 state: city,
                 city: state,
-=======
-                state: state,
-                city: city,
->>>>>>> ed2680de07602e3de7d4155265513063599d94e4
             };
     
     
@@ -80,11 +75,7 @@ module.exports = {
                                 type: "Point",
                                 coordinates: [longitude, latitude],
                             },
-<<<<<<< HEAD
                             $maxDistance: 75000,
-=======
-                            $maxDistance: 5000,
->>>>>>> ed2680de07602e3de7d4155265513063599d94e4
                         }
                     }
                 }).toArray();
@@ -103,8 +94,4 @@ module.exports = {
         }
     }
     
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> ed2680de07602e3de7d4155265513063599d94e4

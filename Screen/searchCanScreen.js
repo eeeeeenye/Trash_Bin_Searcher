@@ -31,9 +31,10 @@ const SearchCan = () => {
   const [selectedSearchWay, setSelectedSearchWay] = useState(true);
   const [markerInfo, setMarkerInfo] = useState({});
   const [responseDatas, setResponseDatas] = useState([]);
+  const [responseDatas2, setResponseDatas2] = useState([]);
   const modalRef = useRef(null);
   const trashCategory = ["재활용만", "일반\n쓰레기만", "모두"];
-
+  const modalRef2 = useRef(null);
   const dummydatas = [
     {
       idx: 3,
@@ -83,19 +84,21 @@ const SearchCan = () => {
       reg_at: 1517887658000,
     },
   ];
+  const fetchData = async (lat, lng) => {
+    try {
+      const response = await axios.post(
+        "http://10.20.102.229:3030/search/bin_read_myloc",
+        {
+          latitude: lat,
+          longitude: lng,
+          isSeoul: true
+        }
+      );
+      console.log(response.data);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "http://10.20.104.20:8080/search/bin_read_myloc",
-          {
-            latitude: CoodData.latitude,
-            longitude: CoodData.longitude,
-          }
-        );
-
-        const extractedData = response.data.map((item) => ({
+      // Check if superBinData is an array and then process it
+      if (Array.isArray(response.data.superBinData)) {
+        const extractedData = response.data.superBinData.map((item) => ({
           _id: item._id,
           address: item.address,
           location: item.location,
@@ -103,19 +106,35 @@ const SearchCan = () => {
           input_wastes: item.input_wastes,
           image_url: item.image_url,
         }));
+        const extractedData2 = response.data.seoulData.map((item) => ({
+          _id: item._id,
+          address: item.입력주소,
+          name:item.detail,
+          location: item.location,
+         
+        }));
 
         setResponseDatas(extractedData);
-
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
+        setResponseDatas2(extractedData2 )
+        console.log(response.data.seoulData)
+      } else {
+        console.log("superBinData is not an array or is undefined");
       }
-    };
-    fetchData();
-  }, []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (latitude == 0 || longitude == 0) {
+      fetchData(CoodData.latitude, CoodData.longitude);
+    } else {
+      fetchData(latitude, longitude);
+    }
+  }, [latitude, longitude]);
 
   const encodeURLWithUnderscore = (url) => {
-    if (url === "") {
+    if (!url) {
       return "../assets/nephron_default.png";
     }
     const parts = url.split("/");
@@ -131,7 +150,7 @@ const SearchCan = () => {
     const removeTrailingUnderscore = addUnderscoreAfterNumber.replace(/_$/, "");
 
     parts[parts.length - 1] = removeTrailingUnderscore;
-
+    console.log("url ", parts.join("/"));
     return parts.join("/");
   };
 
@@ -190,6 +209,13 @@ const SearchCan = () => {
     modalRef.current?.open();
   };
 
+  const handleMarker2 = (marker) => {
+    setMarkerInfo(marker);
+    modalRef2.current?.open();
+
+  };
+
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -235,6 +261,21 @@ const SearchCan = () => {
                 onPress={() => handleMarker(realData)}
               />
             ))}
+
+      {responseDatas2.length > 0 &&
+        responseDatas2.map((realData) => (
+          <Marker
+            key={realData._id}
+            coordinate={{
+              latitude: realData.location.coordinates[1], // 위도
+              longitude: realData.location.coordinates[0], // 경도
+            }}
+            image={require("../assets/marker_n.png")}
+            title={realData.name}
+            description={realData.address}
+            onPress={() => handleMarker2(realData)}
+          />
+        ))}
         </MapView>
 
         <View style={styles.tabContainer}>
@@ -263,7 +304,10 @@ const SearchCan = () => {
           onChangeText={setAddress}
         />
         <TouchableOpacity
-          onPress={handleAddressSubmit}
+          onPress={() => {
+            handleAddressSubmit();
+            fetchData(latitude, longitude);
+          }}
           style={styles.searchIconContainer}
         >
           <Image
@@ -290,7 +334,15 @@ const SearchCan = () => {
             marker={markerInfo}
           />
         </Modalize>
-
+        <Modalize
+          ref={modalRef2}
+          snapPoint={deviceHeight - 300}
+          scrollViewProps={{ showsVerticalScrollIndicator: false }}
+        >
+          <ModalContent2
+            marker={markerInfo}
+          />
+        </Modalize> 
         <View style={styles.bottomBar}>
           <TouchableOpacity onPress={handleMylocation}>
             <Image
@@ -418,9 +470,10 @@ const styles = StyleSheet.create({
 });
 
 function ModalContent({ encodeURL, marker }) {
-  if (marker == null) {
+  if (!marker) {
     return <Text>"data isn't exist"</Text>;
   }
+  const inputWastes = marker.input_wastes || [];
   if (marker) {
     return (
       <ScrollView contentContainerStyle={styles.modalContent}>
@@ -434,10 +487,10 @@ function ModalContent({ encodeURL, marker }) {
             }}
           />
         )}
-        {marker.imageurl.length > 0 && (
+        {marker.imageurl != "" && (
           <Image
             source={{
-              uri: encodeURL(marker.imageurl),
+              uri: encodeURL(marker.image_url),
             }}
             style={{
               width: deviceWidth - 30,
@@ -451,7 +504,7 @@ function ModalContent({ encodeURL, marker }) {
         <InfoRow
           icon="✔️"
           title="타입가능성"
-          content={marker.input_wastes.join(", ")}
+          content={inputWastes.length > 0 ? inputWastes.join(", ") : ""}
         />
         <InfoRow
           icon="⏰"
@@ -459,6 +512,41 @@ function ModalContent({ encodeURL, marker }) {
           content="1일 1회 30개 (1회 30개)"
         />
         <InfoRow icon="🕰️" title="운영시간" content="08:00 ~ 20:00" />
+        <InfoRow icon="📍" title="주소" content={marker.address} />
+        {/* Action Button */}
+      </ScrollView>
+    );
+  } else {
+    return <text>index 데이터가 존재하지 않습니다.</text>;
+  }
+}
+
+function ModalContent2({  marker }) {
+  if (marker == null) {
+    return <Text>"data isn't exist"</Text>;
+  }
+  if (marker) {
+    return (
+      <ScrollView contentContainerStyle={styles.modalContent}>
+       
+          <Image
+            source={require("../assets/nephron_default.png")}
+            style={{
+              width: deviceWidth - 30,
+              height: (deviceWidth - 30) * 0.75,
+              borderRadius: 15,
+            }}
+          />
+        
+   
+        <Text style={styles.title}>{marker.name}</Text>
+        {/* Information Rows */}
+        <InfoRow
+          icon="✔️"
+          title="타입가능성"
+          content="일반 쓰레기"
+        />
+
         <InfoRow icon="📍" title="주소" content={marker.address} />
         {/* Action Button */}
       </ScrollView>

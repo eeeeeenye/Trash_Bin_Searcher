@@ -38,16 +38,17 @@ const ComplaintPage = () => {
   const handleSubmit = async () => {
       try {
         const payload = {
+          uri:photos,
           title:title,
           address: location,
-          text: content,
+          options: content,
           date: date,
-          photos: photos, // Assuming options is equivalent to binType
+          type:'delete' // Assuming options is equivalent to binType
         };
         console.log(payload)
         
     
-        const response = await axios.post("http://10.20.102.193:3030/post/bin_del_post ", payload);
+        const response = await axios.post("http://10.20.102.207:3030/post/bin_post", payload);
     
         if (response.status === 200) {
           console.log('쓰레기통이 민원이 성공적으로 등록되었습니다.');
@@ -110,7 +111,7 @@ const ComplaintPage = () => {
             />
           ))}
         </View>
-        {photos.length < 4 && <TouchableOpacity style={styles.button} onPress={handleAddPhoto}>
+        {photos.length < 1 && <TouchableOpacity style={styles.button} onPress={handleAddPhoto}>
         <Text style={styles.buttonText}>사진 추가</Text>
         </TouchableOpacity>} 
         <View style={styles.disclaimer}>

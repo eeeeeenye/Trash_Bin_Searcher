@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -7,14 +7,34 @@ import {
   ScrollView,
   Dimensions,
   SafeAreaView,
-  Alert
+  Alert,
+  Image,
 } from "react-native";
+import { Modalize } from "react-native-modalize";
+import axios from 'axios';
 import { useNavigation } from "@react-navigation/native";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+const imageMapping = {
+  canAndPet: require("../assets/marker_all.png"),
+  pet: require("../assets/marker_pet.png"),
+  pp: require("../assets/marker_pp.png"),
+};
 
-const deviceWidth = Dimensions.get("window").width;
+const imageReturn = (arr) => {
+  if (arr.includes("캔") && arr.includes("투명 페트")) {
+    return "canAndPet";
+  } else if (arr.includes("투명 페트")) {
+    return "pet";
+  } else if (arr.includes("무색 PP")) {
+    return "pp";
+  } else {
+    return "";
+  }
+};
 const API_KEY = "AIzaSyC3k7HBbhN327lvM3fyx006TZ3bHcYS9KY";
-
+const deviceWidth = Dimensions.get("window").width;
+const deviceHeight = Dimensions.get("window").height;
 
 const specialCities = [
   "서울특별시",
@@ -282,12 +302,17 @@ const cities = {
 
 const LocationSearch = () => {
   const navigation = useNavigation();
+  const [responseData, setResponseData] = useState([]);
+  const [markerInfo, setMarkerInfo] = useState(null);
+  const modalRef = useRef(null);
+  const modalRef2 = useRef(null);
 
   const [selectedLocation, setSelectedLocation] = useState(null); // 특별시,광역시,도 가 선택됬을 때 그에 맞는 시,군,구를 보여주게하기 위한  변수
   const [selectedDistrict, setSelectedDistrict] = React.useState(null);
   const [checkPushCity, setCheckPushCity] = React.useState(false); //특별시,광역시,도 가 선택됬을 때 뷰를 전환하기 위한 변수
   const [selectedSearchWay, setSelectedSerchWay] = React.useState(false); //검색방식을 컨트롤하기 위한 boolean타입 변수
-
+  const [responseDatas, setResponseDatas] = useState([]);
+  const [responseDatas2, setResponseDatas2] = useState([]);
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
 
@@ -301,6 +326,87 @@ const LocationSearch = () => {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   };
+  const encodeURLWithUnderscore = (url) => {
+    if (url === "") {
+      return "../assets/nephron_default.png";
+    }
+    const parts = url.split("/");
+    const lastPart = parts[parts.length - 1];
+
+    // 5자리 숫자 뒤에 _ 가 없으면 추가
+    const addUnderscoreAfterNumber = lastPart.replace(
+      /(\d{5})(?![\d_])/,
+      "$1_"
+    );
+
+    // 문자열 끝에 _ 가 있으면 제거
+    const removeTrailingUnderscore = addUnderscoreAfterNumber.replace(/_$/, "");
+
+    parts[parts.length - 1] = removeTrailingUnderscore;
+
+    return parts.join("/");
+  };
+
+  const handleMarker = (marker) => {
+    setMarkerInfo(marker);
+    modalRef.current?.open();
+  };
+  const handleMarker2 = (marker) => {
+    setMarkerInfo(marker);
+    modalRef2.current?.open();
+
+  };
+
+useEffect(() => {
+    const fetchData = async () => {
+      if (selectedLocation) {
+        try {
+          console.log(selectedLocation)
+          console.log(selectedDistrict)
+          const response = await axios.post(
+            "http://10.20.102.229:3030/search/bin_read_region",
+            {
+              state:selectedLocation, // '특별시', '광역시', '도'를 포함한 지역 이름을 그대로 보냅니다.
+              city:selectedDistrict,
+            }
+           
+          ); 
+          
+          const extractedData = response.data.super_bin.map((item) => ({
+              _id: item._id,
+              address: item.address,
+              location: item.location,
+              name: item.name,
+              input_wastes: item.input_wastes,
+              image_url: item.image_url,
+            }));
+
+            const extractedData2 = response.data.Seoul_trashbin.map((item) => ({
+              _id: item._id,
+              address: item.입력주소,
+              name:item.detail,
+              location: item.location,
+             
+            }));
+            setResponseDatas(extractedData);
+            
+            setResponseDatas2(extractedData2 ); // 응답으로 받은 데이터를 state에 저장
+            console.log(response.data.Seoul_trashbin)
+ 
+          
+         
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    fetchData();
+  }, [selectedLocation,selectedDistrict]); 
+ // 의존성 배열을 selectedLocation으로 변경했습니다.
+  
+  
+  
+
 
   const handleLocationSelect = (location) => {
     setSelectedLocation(location);
@@ -325,6 +431,7 @@ const LocationSearch = () => {
     } catch (error) {
       Alert.alert("Error", "Geocoding API request failed");
     }
+    
   };
   const renderMapCheck = () => (
     <View>
@@ -350,13 +457,66 @@ const LocationSearch = () => {
           </TouchableOpacity>
         </View>
       </View>
+      <GestureHandlerRootView style={styles.flexContainer}>
       <MapView
         style={{ flex: 1 }}
         provider={PROVIDER_GOOGLE}
         initialRegion={initialRegion}
         showsUserLocation={true}
         region={initialRegion}
-      />
+      >
+        {responseDatas.length > 0 &&
+        responseDatas.map((realData) => (
+          <Marker
+          key={realData._id}
+          coordinate={{
+            latitude: realData.location.coordinates[1], // 위도
+            longitude: realData.location.coordinates[0], // 경도
+          }}
+          image={imageMapping[imageReturn(realData.input_wastes)]} // 이미지 URL 사용
+          title={realData.name}
+          description={realData.address}
+          onPress={() => handleMarker(realData)}
+        />
+        ))}
+ 
+    {responseDatas2.length > 0 &&
+        responseDatas2.map((realData) => (
+          <Marker
+            key={realData._id}
+            coordinate={{
+              latitude: realData.location.coordinates[1], // 위도
+              longitude: realData.location.coordinates[0], // 경도
+            }}
+            image={require("../assets/marker_n.png")}
+            title={realData.name}
+            description={realData.address}
+            onPress={() => handleMarker2(realData)}
+          />
+        ))}
+    </MapView>
+
+        <Modalize
+          ref={modalRef}
+          snapPoint={deviceHeight - 300}
+          scrollViewProps={{ showsVerticalScrollIndicator: false }}
+        >
+          <ModalContent
+            encodeURL={encodeURLWithUnderscore}
+            marker={markerInfo}
+          />
+        </Modalize> 
+
+        <Modalize
+          ref={modalRef2}
+          snapPoint={deviceHeight - 300}
+          scrollViewProps={{ showsVerticalScrollIndicator: false }}
+        >
+          <ModalContent2
+            marker={markerInfo}
+          />
+        </Modalize> 
+        </GestureHandlerRootView>
     </View>
   );
   const renderSeoulDistricts = () => {
@@ -975,11 +1135,112 @@ const LocationSearch = () => {
     </SafeAreaView>
   );
 };
+
+function ModalContent({ encodeURL, marker }) {
+  if (marker == null) {
+    return <Text>"data isn't exist"</Text>;
+  }
+  if (marker) {
+    return (
+      <ScrollView contentContainerStyle={styles.modalContent}>
+        {marker.image_url === "" && (
+          <Image
+            source={require("../assets/nephron_default.png")}
+            style={{
+              width: deviceWidth - 30,
+              height: (deviceWidth - 30) * 0.75,
+              borderRadius: 15,
+            }}
+          />
+        )}
+        {marker.image_url.length > 0 && (
+          <Image
+            source={{
+              uri: encodeURL(marker.image_url),
+            }}
+            style={{
+              width: deviceWidth - 30,
+              height: (deviceWidth - 30) * 0.75,
+              borderRadius: 15,
+            }}
+          />
+        )}
+        <Text style={styles.title}>{marker.name}</Text>
+        {/* Information Rows */}
+        <InfoRow
+          icon="✔️"
+          title="타입가능성"
+          content={marker.input_wastes.join(", ")}
+        />
+        <InfoRow
+          icon="⏰"
+          title="타입개수 제한"
+          content="1일 1회 30개 (1회 30개)"
+        />
+        <InfoRow icon="🕰️" title="운영시간" content="08:00 ~ 20:00" />
+        <InfoRow icon="📍" title="주소" content={marker.address} />
+        {/* Action Button */}
+      </ScrollView>
+    );
+  } else {
+    return <text>index 데이터가 존재하지 않습니다.</text>;
+  }
+}
+function ModalContent2({  marker }) {
+  if (marker == null) {
+    return <Text>"data isn't exist"</Text>;
+  }
+  if (marker) {
+    return (
+      <ScrollView contentContainerStyle={styles.modalContent}>
+       
+          <Image
+            source={require("../assets/nephron_default.png")}
+            style={{
+              width: deviceWidth - 30,
+              height: (deviceWidth - 30) * 0.75,
+              borderRadius: 15,
+            }}
+          />
+        
+   
+        <Text style={styles.title}>{marker.name}</Text>
+        {/* Information Rows */}
+        <InfoRow
+          icon="✔️"
+          title="타입가능성"
+          content="일반 쓰레기"
+        />
+
+        <InfoRow icon="📍" title="주소" content={marker.address} />
+        {/* Action Button */}
+      </ScrollView>
+    );
+  } else {
+    return <text>index 데이터가 존재하지 않습니다.</text>;
+  }
+}
+
+function InfoRow({ icon, title, content }) {
+  return (
+    <View style={styles.infoRow}>
+      <Text style={styles.infoIcon}>{icon}</Text>
+      <View style={{ flex: 1 }}>
+        <Text style={styles.infoTitle}>{title}</Text>
+        <Text style={styles.infoContent}>{content}</Text>
+      </View>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
     backgroundColor: "#FFFFFF",
+  },
+  flexContainer: {
+    flex: 1,
   },
 
   buttonContainer: {

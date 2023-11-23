@@ -1,4 +1,4 @@
-// TrashBinRegistration.js
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import { View, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Text } from 'react-native';
@@ -9,9 +9,9 @@ const TrashBinRegistration = () => {
   const formatLocationString = (location) => {
     if (!location) return '';
   
-    const { region, city, street, streetNumber, postalCode, country } = location[0];
+    const { region, city, street, streetNumber, postalCode, country } = location[0] || {};
   
-    return `${region} ${city} ${street} ${streetNumber} ${postalCode} ${country}`;
+    return `${region || ''} ${city || ''} ${street || ''} ${streetNumber || ''} ${postalCode || ''} ${country || ''}`;
   };
 
   const [address, setAddress] = useState('');
@@ -33,12 +33,13 @@ const TrashBinRegistration = () => {
         latitude: capturedImage.latitude, // Assuming the location object has latitude and longitude
         longitude: capturedImage.longitude,
         date: date,
-        options: selectedTrashType, // Assuming options is equivalent to binType
+        options: selectedTrashType,
+        type:'create' // Assuming options is equivalent to binType
       };
       console.log(payload)
       
   
-      const response = await axios.post("http://192.168.123.106:3030/post/bin_post", payload);
+      const response = await axios.post("http://192.168.123.108:8080/post/bin_post", payload);
   
       if (response.status === 200) {
         console.log('쓰레기통이 성공적으로 등록되었습니다.');

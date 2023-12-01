@@ -364,7 +364,7 @@ useEffect(() => {
           console.log(selectedLocation)
           console.log(selectedDistrict)
           const response = await axios.post(
-            "http://10.20.102.134:3030/search/bin_read_region",
+            "http://172.16.102.59:3030/search/bin_read_region",
             {
               state:selectedLocation, // '특별시', '광역시', '도'를 포함한 지역 이름을 그대로 보냅니다.
               city:selectedDistrict,

@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import { View, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Text } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Text, Alert } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation from '@react-navigation/native'
 const TrashBinRegistration = () => {
   
   const formatLocationString = (location) => {
@@ -13,7 +14,7 @@ const TrashBinRegistration = () => {
   
     return `${region || ''} ${city || ''} ${street || ''} ${streetNumber || ''} ${postalCode || ''} ${country || ''}`;
   };
-
+  const navigation = useNavigation(); 
   const [address, setAddress] = useState('');
   const [detailAddress, setDetailAddress] = useState('');
   const [selectedTrashType, setSelectedTrashType] = useState('');
@@ -30,20 +31,24 @@ const TrashBinRegistration = () => {
       const payload = {
         address: locationString,
         add_address: detailAddress,
-        latitude: capturedImage.latitude, // Assuming the location object has latitude and longitude
+        latitude: capturedImage.latitude,
         longitude: capturedImage.longitude,
         date: date,
         options: selectedTrashType,
-        type:'create' // Assuming options is equivalent to binType
+        type: 'create',
       };
-      console.log(payload)
-      
-  
-      const response = await axios.post("http://192.168.123.108:8080/post/bin_post", payload);
-  
+
+      const response = await axios.post("http://172.16.102.59:3030/post/bin_post", payload);
+
       if (response.status === 200) {
-        console.log('쓰레기통이 성공적으로 등록되었습니다.');
-        // You can add any other logic here, like redirecting to another screen or showing a success message.
+        Alert.alert("Success", "쓰레기통이 성공적으로 등록되었습니다.", [
+          {
+            text: "OK",
+            onPress: () => {
+              navigation.navigate("MenuScreen");
+            },
+          },
+        ]);
       } else {
         console.log('쓰레기통 등록에 실패하였습니다.');
       }

@@ -19,7 +19,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import CoodData from "../component/coodData";
 
-const API_KEY = "AIzaSyC3k7HBbhN327lvM3fyx006TZ3bHcYS9KY"; // Use your actual API key
+const API_KEY = "YOUR_API_KEY"; // Use your actual API key
 const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Dimensions.get("window").height;
 
@@ -91,7 +91,7 @@ const SearchCan = () => {
         {
           latitude: lat,
           longitude: lng,
-          isSeoul: true
+          isSeoul: true,
         }
       );
       console.log(response.data);
@@ -109,14 +109,13 @@ const SearchCan = () => {
         const extractedData2 = response.data.seoulData.map((item) => ({
           _id: item._id,
           address: item.입력주소,
-          name:item.detail,
+          name: item.detail,
           location: item.location,
-         
         }));
 
         setResponseDatas(extractedData);
-        setResponseDatas2(extractedData2 )
-        console.log(response.data.seoulData)
+        setResponseDatas2(extractedData2);
+        console.log(response.data.seoulData);
       } else {
         console.log("superBinData is not an array or is undefined");
       }
@@ -212,9 +211,7 @@ const SearchCan = () => {
   const handleMarker2 = (marker) => {
     setMarkerInfo(marker);
     modalRef2.current?.open();
-
   };
-
 
   return (
     <KeyboardAvoidingView
@@ -262,20 +259,20 @@ const SearchCan = () => {
               />
             ))}
 
-      {responseDatas2.length > 0 &&
-        responseDatas2.map((realData) => (
-          <Marker
-            key={realData._id}
-            coordinate={{
-              latitude: realData.location.coordinates[1], // 위도
-              longitude: realData.location.coordinates[0], // 경도
-            }}
-            image={require("../assets/marker_n.png")}
-            title={realData.name}
-            description={realData.address}
-            onPress={() => handleMarker2(realData)}
-          />
-        ))}
+          {responseDatas2.length > 0 &&
+            responseDatas2.map((realData) => (
+              <Marker
+                key={realData._id}
+                coordinate={{
+                  latitude: realData.location.coordinates[1], // 위도
+                  longitude: realData.location.coordinates[0], // 경도
+                }}
+                image={require("../assets/marker_n.png")}
+                title={realData.name}
+                description={realData.address}
+                onPress={() => handleMarker2(realData)}
+              />
+            ))}
         </MapView>
 
         <View style={styles.tabContainer}>
@@ -339,10 +336,8 @@ const SearchCan = () => {
           snapPoint={deviceHeight - 300}
           scrollViewProps={{ showsVerticalScrollIndicator: false }}
         >
-          <ModalContent2
-            marker={markerInfo}
-          />
-        </Modalize> 
+          <ModalContent2 marker={markerInfo} />
+        </Modalize>
         <View style={styles.bottomBar}>
           <TouchableOpacity onPress={handleMylocation}>
             <Image
@@ -521,31 +516,25 @@ function ModalContent({ encodeURL, marker }) {
   }
 }
 
-function ModalContent2({  marker }) {
+function ModalContent2({ marker }) {
   if (marker == null) {
     return <Text>"data isn't exist"</Text>;
   }
   if (marker) {
     return (
       <ScrollView contentContainerStyle={styles.modalContent}>
-       
-          <Image
-            source={require("../assets/nephron_default.png")}
-            style={{
-              width: deviceWidth - 30,
-              height: (deviceWidth - 30) * 0.75,
-              borderRadius: 15,
-            }}
-          />
-        
-   
+        <Image
+          source={require("../assets/nephron_default.png")}
+          style={{
+            width: deviceWidth - 30,
+            height: (deviceWidth - 30) * 0.75,
+            borderRadius: 15,
+          }}
+        />
+
         <Text style={styles.title}>{marker.name}</Text>
         {/* Information Rows */}
-        <InfoRow
-          icon="✔️"
-          title="타입가능성"
-          content="일반 쓰레기"
-        />
+        <InfoRow icon="✔️" title="타입가능성" content="일반 쓰레기" />
 
         <InfoRow icon="📍" title="주소" content={marker.address} />
         {/* Action Button */}
